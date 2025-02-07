@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "name in manifest.json",
-  "description": "description in manifest.json",
+  "name": "LinkedIn Extension",
+  "description": "Linkedin Extension",
   "options_ui": {
     "page": "src/pages/options/index.html"
   },
@@ -18,15 +18,25 @@
     "128": "icon-128.png"
   },
   "permissions": [
-    "activeTab"
+    "storage",
+    "alarms",
+    "notifications",
+    "identity",
+    "activeTab",
+    "scripting"
   ],
+  "background" : {
+    "service_worker": "src/pages/background"
+  },
   "content_scripts": [
     {
       "matches": [
         "http://*/*",
         "https://*/*",
-        "<all_urls>"
+        "<all_urls>",
+        "https://www.linkedin.com/*"
       ],
+      
       "js": [
         "src/pages/content/index.tsx"
       ],
