@@ -53,7 +53,7 @@ export default function Popup() {
     if (!apiKey) return;
     setIsLoading(true);
     try {
-      const response = await fetchGeminiSuggestion('Sample LinkedIn post text', apiKey);
+      const response = await fetchGeminiSuggestion('Sample LinkedIn post text');
       setSuggestion(response);
     } catch (error) {
       setSuggestion('Failed to generate suggestion. Please try again.');
