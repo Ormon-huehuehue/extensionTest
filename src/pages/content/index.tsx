@@ -25,7 +25,7 @@ const App = () => {
       textBox?.querySelector(".ai-icon")?.remove();
     };
 
-    const handleFocus = (event: FocusEvent) => {
+    const handleClick = (event: FocusEvent) => {
       const textBox = event.target as HTMLElement;
       textBox.style.backgroundColor = "red";
 
@@ -61,14 +61,7 @@ const App = () => {
         (textBox as HTMLElement).style.backgroundColor = 'red';
         if (!(textBox as HTMLElement).dataset.listenerAdded) {
           (textBox as HTMLElement).dataset.listenerAdded = "true";
-          (textBox as HTMLElement).addEventListener("click", ()=>{
-            alert("clicked");
-            const postContainer = textBox.closest(".feed-shared-update-v2");
-            const descriptionElement = postContainer?.querySelector(".feed-shared-update-v2__description");
-            const description = descriptionElement?.textContent?.trim();
-            console.log("Description : ", description)
-          });
-          (textBox as HTMLElement).addEventListener("focus", handleFocus);
+          (textBox as HTMLElement).addEventListener("click", handleClick);
           (textBox as HTMLElement).addEventListener("blur", handleBlur);
         }
       });
@@ -90,7 +83,7 @@ const App = () => {
     return () => {
       observer.disconnect(); // Cleanup MutationObserver when unmounting
       document.querySelectorAll(".comments-comment-box-comment__text-editor").forEach((textBox) => {
-        (textBox as HTMLElement).removeEventListener("focus", handleFocus);
+        (textBox as HTMLElement).removeEventListener("click", handleClick);
         (textBox as HTMLElement).removeEventListener("blur", handleBlur);
       });
     };
@@ -99,7 +92,6 @@ const App = () => {
   useEffect(() => {
     const fetchSuggestion = async () => {
       if (postData) {
-        console.log("Fetching suggestion for:", postData);
         const response = await fetchGeminiSuggestion(postData);
         console.log("Generated Comment:", response);
       }
