@@ -1,6 +1,7 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 import "./style.css"
+import { fetchGeminiSuggestion } from '@src/lib/lib';
 
 // Create and inject a React UI into the page
 const div = document.createElement("div")
@@ -14,41 +15,89 @@ const root = createRoot(rootContainer)
 
 // Function to modify the DOM elements
 const applyStyles = () => {
-  console.log("applyStyles called")
+
   
-  const elements = document.querySelectorAll(".feed-shared-update-v2__description")
-  if (elements.length > 0) {
-    console.log("Elements found! Applying styles...")
-    elements.forEach((element) => {
-      (element as HTMLElement).style.backgroundColor = "red"
-    })
-  } else {
-    console.log("Waiting for elements...")
-  }
+  const element = document.querySelector(".feed-shared-update-v2__description");
+
+  const commentBox = document.querySelector(".ql-editor");
+  
+    
+  (commentBox as HTMLElement).style.backgroundColor = 'blue';
+  
+
+
+ console.log("Waiting for elements...")
+  
 }
 
 const App = () => {
+
+  const [postData, setPostData] = useState(null);
+  const [showModal, setShowModal] = useState(false)
+
   useEffect(() => {
-    console.log("Content script L dawg")
-    const textBox = document.querySelector(".feed-shared-update-v2__description");
-    console.log("Text box text : ", textBox?.innerHTML)
-
-    // Interval to check for elements every second
     const intervalId = setInterval(() => {
-      applyStyles()
-    }, 1000)
+      const textBox = document.querySelector(".comments-comment-box-comment__text-editor");
+      if (textBox) {
+        textBox.addEventListener("focus", handleFocus);
+        textBox.addEventListener("blur", handleBlur);
+        clearInterval(intervalId); // Stop checking once the class is found
+      }
+    }, 1000); // Check every second
 
-    // MutationObserver to handle dynamically added elements
-    const observer = new MutationObserver(() => {
-      applyStyles()
-    })
+    return () => clearInterval(intervalId); // Clean up on unmount
+  }, []);
 
-    observer.observe(document.body, { subtree: true, childList: true })
+   // method to unmount AI Icon
+   const handleBlur = () => {
+    const textBox = document.querySelector(".comments-comment-box-comment__text-editor");
+    const container = textBox?.querySelector(".ai-icon"); 
+    container?.remove();
+  };
 
-    return () => {
-      clearInterval(intervalId) // Cleanup interval
-      observer.disconnect() // Cleanup observer
-    }
+
+   // method to mount AI Icon
+   const handleFocus = () => {
+    const textBox = document.querySelector(".comments-comment-box-comment__text-editor");
+    const container = document.createElement("div");
+    container.className = "ai-icon";
+    container.setAttribute("style", "position:absolute; bottom:0; right:6rem;");
+    const imgElement = document.createElement("img");
+    imgElement.src = "https://icon-icons.com/icons2/961/PNG/512/bulb_icon-icons.com_74600.png";
+    imgElement.alt = "ai-icon";
+    imgElement.setAttribute("style", "width: 32px; height: 32px; cursor:pointer;");
+    imgElement.addEventListener("click", () => {
+      setShowModal(true);
+    });
+    container.appendChild(imgElement);
+    textBox?.appendChild(container);
+  };
+
+
+
+
+  useEffect(() => {
+    const textBox = document.querySelector(".feed-shared-update-v2__description");
+    console.log("Text box text : ", textBox?.textContent)
+
+    const postData = textBox;
+
+    // // Interval to check for elements every second
+    // const intervalId = setInterval(() => {
+    //   applyStyles()
+    // }, 1000)
+
+    // // MutationObserver to handle dynamically added elements
+    // const observer = new MutationObserver(() => {
+    //   applyStyles()
+    // })
+
+    // observer.observe(document.body, { subtree: true, childList: true })
+
+    // return () => {
+    //   clearInterval(intervalId) // Cleanup interval
+    //   observer.disconnect() // Cleanup observer
+    // }
   }, [])
 
   return (

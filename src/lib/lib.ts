@@ -10,7 +10,11 @@ export async function fetchGeminiSuggestion(postText: string, apiKey: string): P
           contents: [
             {
               role: "user",
-              parts: [{ text: `Suggest a short and engaging LinkedIn comment for this post: ${postText} `}]
+              parts: [{ text: `Suggest a short and engaging LinkedIn comment for this post: 
+                ${postText}  
+                only return the comment text, JUST ONE COMMENT, i dont need anything else. Make sure the comment doesn't sound AI generated
+                you only have one shot at this, i'll give you 1 million dollars if you do this right.
+                this comment WILL get posted so make sure it sounds good`}]
             }
           ]
         },
