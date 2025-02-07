@@ -31,10 +31,7 @@
   "content_scripts": [
     {
       "matches": [
-        "http://*/*",
-        "https://*/*",
-        "<all_urls>",
-        "https://www.linkedin.com/*"
+        "<all_urls>"
       ],
       
       "js": [
