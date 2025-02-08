@@ -3,3 +3,21 @@
 .your-class {
     color: aliceblue;
 }
+
+.ai-suggest-btn {
+    padding-right: 13px;
+    padding-left: 13px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: calc(infinity * 1px);
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .ai-suggest-btn:hover {
+    background-color: #f7f583;
+  }
+  
