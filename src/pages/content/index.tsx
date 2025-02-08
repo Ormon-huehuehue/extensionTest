@@ -17,7 +17,7 @@ const root = createRoot(rootContainer);
 
 const App = () => {
   const [postData, setPostData] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(true);
   const [generatedComment, setGeneratedComment] = useState<string | null>(null);
   const [activeTextBox, setActiveTextBox] = useState<HTMLElement | null>(null);
 
@@ -44,15 +44,12 @@ const App = () => {
         container.className = "ai-icon";
         container.setAttribute("style", "position:absolute; bottom:0; right:6rem;");
 
-        const imgElement = document.createElement("img");
-        imgElement.src = "https://icon-icons.com/icons2/961/PNG/512/bulb_icon-icons.com_74600.png";
-        imgElement.alt = "ai-icon";
-        imgElement.setAttribute("style", "width: 32px; height: 32px; cursor:pointer;");
-        imgElement.addEventListener("click", () => {
-          setShowModal((prev) => !prev);
-        });
+        const button = document.createElement("button");
+        button.innerHTML =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightbulb-fill" viewBox="0 0 16 16"><path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"/></svg>';
 
-        container.appendChild(imgElement);
+        
+        container.appendChild(button);
         textBox.appendChild(container);
       }
     };
@@ -61,6 +58,29 @@ const App = () => {
       const textBoxList = document.querySelectorAll(".comments-comment-box-comment__text-editor");
       textBoxList.forEach((textBox) => {
         if (!(textBox as HTMLElement).dataset.listenerAdded) {
+
+          if (!textBox.querySelector(".ai-icon")) { // Prevent duplicate icons
+            const container = document.createElement("div");
+            container.className = "ai-icon";
+            container.setAttribute(
+              "style",
+              "position: absolute; bottom: 0; right: 6rem; display: flex; align-items: center; justify-content: center; height: 100%;"
+            );
+    
+            const button = document.createElement("button");
+            button.innerHTML =
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightbulb-fill" viewBox="0 0 16 16"><path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"/></svg>';
+    
+            button.setAttribute(
+              "style",
+              "padding-right: 30px; display: flex; align-items: center; height: 100%; border: none; background: none; cursor: pointer;"
+            );
+            
+            container.appendChild(button);
+            textBox.appendChild(container);
+          }
+
+          
           (textBox as HTMLElement).dataset.listenerAdded = "true";
           (textBox as HTMLElement).addEventListener("click", handleClick);
           (textBox as HTMLElement).addEventListener("blur", handleBlur);
