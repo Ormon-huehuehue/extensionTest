@@ -1,6 +1,6 @@
 body {
   width: 400px;
-  height: 400px;
+  height: 500px;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -9,6 +9,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   position: relative;
-  border-radius: 16px; /* Adjust as needed */
+  border-radius: 50px; /* Adjust as needed */
   overflow: hidden; /* Prevent content from overflowing */
 }
