@@ -60,7 +60,6 @@ const App = () => {
     const attachEventListeners = () => {
       const textBoxList = document.querySelectorAll(".comments-comment-box-comment__text-editor");
       textBoxList.forEach((textBox) => {
-        (textBox as HTMLElement).style.backgroundColor = 'red';
         if (!(textBox as HTMLElement).dataset.listenerAdded) {
           (textBox as HTMLElement).dataset.listenerAdded = "true";
           (textBox as HTMLElement).addEventListener("click", handleClick);
@@ -107,11 +106,13 @@ const App = () => {
   useEffect(() => {
     if (generatedComment && activeTextBox) {
       const textArea = activeTextBox.querySelector("textarea");
-      if (textArea) {
-        (textArea as HTMLTextAreaElement).value = generatedComment;
-      } else {
+      if(activeTextBox.textContent == ""){
         activeTextBox.textContent = generatedComment;
       }
+      else{
+        console.log("Textbox already has a comment")
+      }
+      
     }
   }, [generatedComment, activeTextBox]);
 
