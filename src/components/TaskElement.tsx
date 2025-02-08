@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Task = () => {
+const TaskElement = () => {
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Engage with Your Network</h2>
@@ -15,4 +15,4 @@ const Task = () => {
   );
 };
 
-export default Task;
+export default TaskElement;
