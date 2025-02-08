@@ -6,13 +6,15 @@ import { Link } from "react-router-dom";
 const Topbar = () => {
   return (
     <div className= 'w-screen flex justify-between py-1 px-5 border-b-2 border-[#efefef] '>
-        <Link to="/" className="px-4 py-2 text-white rounded">
+        <Link to="/" className="px-4 py-2 ">
         <div className= 'flex '>
             <img src= {logo} alt="" width={40} height={40}/>
         </div>
         </Link>
         <div className= 'flex items-center justify-center text-center hover:cursor-pointer'>
+        <Link to="/settings" className="px-4 py-2">
             <VscAccount size={25} />
+        </Link>
         </div>
     </div>
   )

@@ -12,3 +12,8 @@ body {
   border-radius: 50px; /* Adjust as needed */
   overflow: hidden; /* Prevent content from overflowing */
 }
+
+
+html, body {
+  background: transparent;
+}
