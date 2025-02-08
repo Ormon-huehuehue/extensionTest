@@ -18,6 +18,8 @@ const root = createRoot(rootContainer);
 const App = () => {
   const [postData, setPostData] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [generatedComment, setGeneratedComment] = useState<string | null>(null);
+  const [activeTextBox, setActiveTextBox] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     const handleBlur = (event: FocusEvent) => {
@@ -27,7 +29,7 @@ const App = () => {
 
     const handleClick = (event: FocusEvent) => {
       const textBox = event.target as HTMLElement;
-      textBox.style.backgroundColor = "red";
+      setActiveTextBox(textBox); // Store the active text box reference
 
       // Find the nearest post container and extract the description
       const postContainer = textBox.closest(".feed-shared-update-v2");
@@ -94,11 +96,24 @@ const App = () => {
       if (postData) {
         const response = await fetchGeminiSuggestion(postData);
         console.log("Generated Comment:", response);
+        setGeneratedComment(response);
       }
     };
 
     fetchSuggestion();
   }, [postData]); // Fetch suggestion only when postData changes
+
+  // Insert generated comment into the text box
+  useEffect(() => {
+    if (generatedComment && activeTextBox) {
+      const textArea = activeTextBox.querySelector("textarea");
+      if (textArea) {
+        (textArea as HTMLTextAreaElement).value = generatedComment;
+      } else {
+        activeTextBox.textContent = generatedComment;
+      }
+    }
+  }, [generatedComment, activeTextBox]);
 
   return (
     <div className="absolute bottom-0 left-0 text-lg text-black bg-amber-400 z-50 p-2">
