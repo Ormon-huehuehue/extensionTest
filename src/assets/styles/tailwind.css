@@ -7,7 +7,8 @@
 @theme {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
-  --navBackground: oklch(0.98 0.016 73.684); 
+  --color-navBackground: oklch(0.98 0.016 73.684); 
+  --color-descriptionText : oklch(0 0 80);
 
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));

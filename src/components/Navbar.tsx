@@ -1,24 +1,32 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { HashRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import Tasks from './Tasks';
 import Insights from './Insights';
 import Connections from './Connections';
 import Popup from '@src/pages/popup/Popup';
 
+type panelType = "Tasks" | "Insights" | "Connections";
 
 const Navbar = () => {
 
+  const [selected, setSelected] = useState<panelType>("Tasks");
+
+  const handleClick = (panel : panelType)=>{
+    setSelected(panel);
+  }
 
   return (
 
-    <div className= 'w-[80%] flex py-2 px-3 text-[#1f1f1f] justify-around border-2 border-[#efefef] bg-[#f9fbfc] rounded-xl'>
+    <div className= 'w-[80%] flex py-2 px-3 text-[#787878] justify-around border-2 border-[#efefef] bg-[#f9fbfc] rounded-xl'>
         {/* Navigation Links */}
-        <div className="flex gap-4 justify-center">
-            <Link to="/insights" className="px-4 py-2 bg-gray-500 text-white rounded">Insights</Link>
-            <Link to="/tasks" className="px-4 py-2 bg-gray-500 text-white rounded">Tasks</Link>
-            <Link to="/connections" className="px-4 py-2 bg-gray-500 text-white rounded">Connections</Link>
+        <div className="flex gap-4 justify-center items-center w-full">
+            <Link to="/insights" className={`py-2 w-1/3 ${selected == "Insights" ? "bg-[#ffffff] border-1 border-[#efefef] shadow-sm" : "bg-transparent"}  rounded `} 
+            onClick ={()=> handleClick("Insights")}>Insights</Link>
+            <Link to="/tasks" className={` py-2 w-1/3 ${selected == "Tasks" ?  "bg-[#ffffff] border-1 border-[#efefef] shadow-sm" : "bg-transparent"}  rounded `}
+            onClick ={()=> handleClick("Tasks")}>Tasks</Link>
+            <Link to="/connections" className={`py-2 w-1/3  ${selected == "Connections" ?  "bg-[#ffffff] border-1 border-[#efefef] shadow-sm" : "bg-transparent"}  rounded`}
+            onClick ={()=> handleClick("Connections")}>Connections</Link>
           </div>
-          {/* Routes */}
     </div>
   )
 }
