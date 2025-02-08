@@ -28,31 +28,33 @@ const App = () => {
     };
 
     const handleClick = (event: FocusEvent) => {
-      const textBox = event.target as HTMLElement;
-      setActiveTextBox(textBox); // Store the active text box reference
+      // console.log("HandleClick ran")
+      // const textBox = event.target as HTMLElement;
+      // setActiveTextBox(textBox); // Store the active text box reference
 
-      // Find the nearest post container and extract the description
-      const postContainer = textBox.closest(".feed-shared-update-v2");
-      const description = postContainer?.querySelector(".feed-shared-update-v2__description")?.textContent?.trim();
+      // // Find the nearest post container and extract the description
+      // const postContainer = textBox.closest(".feed-shared-update-v2");
+      // const description = postContainer?.querySelector(".feed-shared-update-v2__description")?.textContent?.trim();
 
-      console.log("Focused post description:", description);
-      setPostData(description || null);
-
-      // Inject AI icon into the focused comment box
-      if (!textBox.querySelector(".ai-icon")) { // Prevent duplicate icons
-        const container = document.createElement("div");
-        container.className = "ai-icon";
-        container.setAttribute("style", "position:absolute; bottom:0; right:6rem;");
-
-        const button = document.createElement("button");
-        button.innerHTML =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightbulb-fill" viewBox="0 0 16 16"><path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"/></svg>';
-
-        
-        container.appendChild(button);
-        textBox.appendChild(container);
-      }
+      // console.log("Focused post description:", description);
+      // setPostData(description || null);
     };
+
+    const handleAiButtonClick = (event : FocusEvent)=>{
+     
+      const button = event.target as HTMLElement;
+      const textBox = button.closest(".comments-comment-box-comment__text-editor") as HTMLElement;
+      if(textBox){
+        setActiveTextBox(textBox);
+      }
+
+       // Find the nearest post container and extract the description
+       const postContainer = textBox.closest(".feed-shared-update-v2");
+       const description = postContainer?.querySelector(".feed-shared-update-v2__description")?.textContent?.trim();
+ 
+       
+       setPostData(description || null);
+    }
 
     const attachEventListeners = () => {
       const textBoxList = document.querySelectorAll(".comments-comment-box-comment__text-editor");
@@ -70,13 +72,10 @@ const App = () => {
             const button = document.createElement("button");
             button.innerHTML =
             '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightbulb-fill" viewBox="0 0 16 16"><path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"/></svg>';
-    
-            // button.setAttribute(
-            //   "style",
-            //   "padding-right: 13px; padding-left: 13px; display: flex; align-items: center; height: 100%; border: none; background: none; cursor: pointer; border-radius: calc(infinity * 1px); background-color: #a3a282;"
-            // );
 
             button.classList.add("ai-suggest-btn");
+
+            button.addEventListener("click", handleAiButtonClick);
 
             container.appendChild(button);
             textBox.appendChild(container);
@@ -127,14 +126,25 @@ const App = () => {
   // Insert generated comment into the text box
   useEffect(() => {
     if (generatedComment && activeTextBox) {
-      const textArea = activeTextBox.querySelector("textarea");
-      if(activeTextBox.textContent == ""){
-        activeTextBox.textContent = generatedComment;
+      const textArea = activeTextBox.getElementsByTagName("p");
+
+      if (textArea.length > 0) {
+        textArea[0].textContent = ""; // Clear existing content
+        textArea[0].textContent =" Generating Comment ...."
       }
-      else{
-        console.log("Textbox already has a comment")
+
+      setTimeout(() => {
+      if (textArea[0]) {
+        textArea[0].textContent = generatedComment;
       }
-      
+    }, 2000);
+
+      const aiIcon = activeTextBox.getElementsByClassName("ai-icon");
+      if (aiIcon.length > 0) {
+        aiIcon[0].remove(); // Remove the first AI button
+      }
+
+      setGeneratedComment(""); // Reset generated comment after insertion
     }
   }, [generatedComment, activeTextBox]);
 

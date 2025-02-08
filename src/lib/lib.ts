@@ -6,7 +6,6 @@ export async function fetchGeminiSuggestion(postText: string): Promise<string> {
         const apiKey = await new Promise<string | null>((resolve) => {
             chrome.storage.local.get("GEMINI_API_KEY", (data) => {
                 if (data.GEMINI_API_KEY) {
-                    console.log("API Key found:", data.GEMINI_API_KEY);
                     resolve(data.GEMINI_API_KEY);
                 } else {
                     resolve(null);
