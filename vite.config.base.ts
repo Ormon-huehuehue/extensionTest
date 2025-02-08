@@ -37,5 +37,5 @@ export default defineConfig({
     stripDevIcons(isDev),
     crxI18n({ localize, src: './src/locales' }),
   ],
-  publicDir: resolve(__dirname, 'public'),
+  publicDir: resolve(__dirname, 'public')
 });

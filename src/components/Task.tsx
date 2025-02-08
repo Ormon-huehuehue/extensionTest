@@ -1,8 +1,5 @@
 import React from 'react';
-import { panel, panelStateAtom } from '@src/state/atoms';
-import { useRecoilState } from 'recoil';
 
-const [selectedPanel, setSelectedPanel] = useRecoilState<panel>(panelStateAtom);
 
 const Task = () => {
   return (

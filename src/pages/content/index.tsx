@@ -149,11 +149,7 @@ const App = () => {
   }, [generatedComment, activeTextBox]);
 
   return (
-    <div className="absolute bottom-0 left-0 text-lg text-black bg-amber-400 z-50 p-2">
-      Content script <span className="font-bold">loaded</span>
-      <button className="ml-2 px-2 py-1 bg-black text-white" onClick={() => setShowModal(true)}>
-        Show AI Icon
-      </button>
+    <div>
     </div>
   );
 };

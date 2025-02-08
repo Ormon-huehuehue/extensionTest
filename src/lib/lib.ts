@@ -1,17 +1,13 @@
 import axios from "axios";
+import browser from 'webextension-polyfill';
 
 export async function fetchGeminiSuggestion(postText: string): Promise<string> {
     try {
         // Get API Key from Chrome Storage
-        const apiKey = await new Promise<string | null>((resolve) => {
-            chrome.storage.local.get("GEMINI_API_KEY", (data) => {
-                if (data.GEMINI_API_KEY) {
-                    resolve(data.GEMINI_API_KEY);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
+        const apiKey = await (async () => {
+            const data = await browser.storage.local.get("GEMINI_API_KEY");
+            return data.GEMINI_API_KEY || null;
+        })();
 
         if (!apiKey) {
             return "No API Key found. Please set your API key in the extension settings.";

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "LinkedIn Extension",
-  "description": "Linkedin Extension",
+  "name": "LinkedIn Coach",
+  "description": "Linkedin Coach",
   "options_ui": {
     "page": "src/pages/options/index.html"
   },
