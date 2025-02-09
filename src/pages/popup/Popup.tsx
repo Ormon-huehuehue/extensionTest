@@ -28,7 +28,7 @@ export default function Popup() {
 
   return (
     <Router>
-      <div className="flex flex-col">
+      <div className=" ">
         <div className="w-full h-full text-center text-black justify-center items-center">
           <Topbar />
           <div className="py-5 flex justify-center">
@@ -37,7 +37,7 @@ export default function Popup() {
         </div>
       </div>
       <Routes>
-        <Route path="/" element={<Navigate to="/tasks" replace />} /> 
+        <Route path="/" element={<Navigate to="/insights" replace />} /> 
             <Route path="/insights" element={<Insights />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/connections" element={<Connections />} />
