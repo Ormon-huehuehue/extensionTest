@@ -13,6 +13,7 @@
   --color-grayText : #787878;
   --color-grayBorder : #efefef;
   --color-blueBackground : #0075f6;
+  --color-linkedInBackground : #0051aa;
 
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));

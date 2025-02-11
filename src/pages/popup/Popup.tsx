@@ -12,6 +12,7 @@ import Connections from "@src/components/Connections";
 import LoginScreen from "@src/components/LoginScreen";
 import HomeScreen from "@src/components/HomeScreen";
 import SignupScreen from "@src/components/SignupScreen";
+import AccountScreen from "@src/components/AccountScreen";
 
 
 
@@ -37,11 +38,10 @@ export default function Popup() {
         </div>
       </div>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} /> 
+        <Route path="/" element={<Navigate to="/home/Tasks" replace />} /> 
             <Route path = '/home/:panel' element={<HomeScreen/>}/>
             <Route path="/settings" element={<Settings />} />
-            <Route path="/login" element = {<LoginScreen/>} />
-            <Route path="/signup" element = {<SignupScreen/>} />
+            <Route path='/account/:method' element = {<AccountScreen/>} />
       </Routes>
     </Router>
   );

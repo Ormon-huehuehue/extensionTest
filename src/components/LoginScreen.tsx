@@ -48,7 +48,7 @@ const LoginScreen = () => {
           <div className='mt-6'>
             <button
               type="button"
-              className="flex w-full justify-center rounded-md bg-blueBackground px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blueBackground cursor-pointer"
+              className="flex w-full justify-center rounded-md bg-blueBackground px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blueBackground cursor-pointer"
             >
               Login
             </button>
@@ -68,7 +68,7 @@ const LoginScreen = () => {
           <div>
             <button
               type="button"
-              className="flex w-full justify-center rounded-md bg-blueBackground px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blueBackground cursor-pointer"
+              className="flex w-full justify-center rounded-md bg-linkedInBackground px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blueBackground cursor-pointer"
             >
               Sign in with LinkedIn
             </button>
