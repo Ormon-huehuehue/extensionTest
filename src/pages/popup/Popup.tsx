@@ -11,6 +11,7 @@ import Tasks from "@src/components/Tasks";
 import Connections from "@src/components/Connections";
 import LoginScreen from "@src/components/LoginScreen";
 import HomeScreen from "@src/components/HomeScreen";
+import SignupScreen from "@src/components/SignupScreen";
 
 
 
@@ -36,17 +37,14 @@ export default function Popup() {
         </div>
       </div>
       <Routes>
-        <Route path="/" element={<Navigate to="/home/Connections" replace />} /> 
+        <Route path="/" element={<Navigate to="/login" replace />} /> 
             <Route path = '/home/:panel' element={<HomeScreen/>}/>
-           
             <Route path="/settings" element={<Settings />} />
             <Route path="/login" element = {<LoginScreen/>} />
+            <Route path="/signup" element = {<SignupScreen/>} />
       </Routes>
     </Router>
   );
 }
 
 
- {/* <Route path="/insights" element={<Insights />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/connections" element={<Connections />} /> */}

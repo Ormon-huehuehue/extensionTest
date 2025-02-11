@@ -11,6 +11,8 @@
   --color-descriptionText : oklch(0 0 80);
   --color-headingText : #434343;
   --color-grayText : #787878;
+  --color-grayBorder : #efefef;
+  --color-blueBackground : #0075f6;
 
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));

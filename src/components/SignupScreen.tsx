@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LoginScreen = () => {
+const SignupScreen = () => {
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-5 lg:px-8 border-2 border-grayBorder mx-5 my-5 rounded-xl">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -79,4 +79,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default SignupScreen;
