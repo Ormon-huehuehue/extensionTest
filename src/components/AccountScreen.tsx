@@ -9,8 +9,8 @@ const AccountScreen = () => {
 
   return (
     <div>
-    {method == "login" && <LoginScreen/>}
-    {method == "signup" && <SignupScreen/>}
+      {method == "login" && <LoginScreen/>}
+      {method == "signup" && <SignupScreen/>}
     </div>
   )
 }
