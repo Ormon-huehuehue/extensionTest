@@ -16,9 +16,6 @@ const Topbar = () => {
 
   useEffect(()=>{
     const token = localStorage.getItem('token')
-    console.log("Location : ", location)
-    console.log("MEthod : ", method)
-    console.log("Checking if the user is logged in ")
     if(token){
       setIsLoggedIn(true)
     }
@@ -37,34 +34,17 @@ const Topbar = () => {
             <VscAccount size={25} />
           </Link>
         ) : (
-          <>
-         
-        
-        
-          {method == "login" ?
+        <>
+        {method == "login" ?
           <Link to="/account/signup" className="px-4 py-2 text-black">
-              <p>Sign up</p>
+              <p className='text-lg'>Sign up</p>
           </Link>  : 
           <Link to="/account/login" className="px-4 py-2 text-black">
-          <p className=" text-xl">Log in</p>
-      </Link>}
-            
-            
-    
-          </>
-)}
+            <p className=" text-lg">Log in</p>
+          </Link>}
+        </>
+        )}
 
-
-        {/* {method == "signup"  ?  
-            :  null}
-        
-          {method == "login" ?
-          <Link to="/account/signup" className="px-4 py-2 text-black border-2 border-red-500">
-              <p>Sign up</p>
-          </Link>  : null} */}
-        
-
-        {/* {method == "login" &&} */}
         </div>
     </div>
   )
