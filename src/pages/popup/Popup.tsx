@@ -36,7 +36,7 @@ export default function Popup() {
         </div>
       </div>
       <Routes>
-        <Route path="/" element={<Navigate to="/home/Tasks" replace />} /> 
+        <Route path="/" element={<Navigate to="/home/Connections" replace />} /> 
             <Route path = '/home/:panel' element={<HomeScreen/>}/>
            
             <Route path="/settings" element={<Settings />} />

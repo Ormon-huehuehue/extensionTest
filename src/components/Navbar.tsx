@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { HashRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Link, useNavigate, useParams } from "react-router-dom";
 import Tasks from './Tasks';
 import Insights from './Insights';
 import Connections from './Connections';
@@ -9,7 +9,8 @@ type panelType = "Tasks" | "Insights" | "Connections";
 
 const Navbar = () => {
 
-  const [selected, setSelected] = useState<panelType>("Tasks");
+  const {panel} = useParams();
+  const [selected, setSelected] = useState(panel);
 
   const handleClick = (panel : panelType)=>{
     setSelected(panel);
