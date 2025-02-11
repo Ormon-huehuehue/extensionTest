@@ -9,6 +9,8 @@ import Task from "@src/components/TaskElement";
 import Insights from "@src/components/Insights";
 import Tasks from "@src/components/Tasks";
 import Connections from "@src/components/Connections";
+import LoginScreen from "@src/components/LoginScreen";
+import HomeScreen from "@src/components/HomeScreen";
 
 
 
@@ -23,26 +25,28 @@ export default function Popup() {
     };
 
     checkApiKey().then(setApiKeyPresent);
-  }, []); // Added dependency array to avoid infinite loop
+  }, []); 
 
 
   return (
     <Router>
-      <div className=" ">
+      <div >
         <div className="w-full h-full text-center text-black justify-center items-center">
           <Topbar />
-          <div className="py-5 flex justify-center">
-            <Navbar />
-          </div>    
         </div>
       </div>
       <Routes>
-        <Route path="/" element={<Navigate to="/connections" replace />} /> 
-            <Route path="/insights" element={<Insights />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/connections" element={<Connections />} />
+        <Route path="/" element={<Navigate to="/home/Tasks" replace />} /> 
+            <Route path = '/home/:panel' element={<HomeScreen/>}/>
+           
             <Route path="/settings" element={<Settings />} />
+            <Route path="/login" element = {<LoginScreen/>} />
       </Routes>
     </Router>
   );
 }
+
+
+ {/* <Route path="/insights" element={<Insights />} />
+            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/connections" element={<Connections />} /> */}
