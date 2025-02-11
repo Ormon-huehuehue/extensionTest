@@ -11,7 +11,7 @@ const TaskElement = ({ title, description, isChecked }: { title: string, descrip
     >
       <div className="flex flex-col justify-center gap-1">
         <div className="flex items-center">
-        <div className="flex text-[16px] text-start items-center gap-3 font-thin">
+          <div className="flex text-[16px] text-start items-center gap-3 font-thin">
             <div
               className={`w-4 h-4 border-2 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ${
                 checked ? "bg-blue-500 border-blue-500" : "border-gray-400"

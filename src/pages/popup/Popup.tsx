@@ -37,7 +37,7 @@ export default function Popup() {
         </div>
       </div>
       <Routes>
-        <Route path="/" element={<Navigate to="/insights" replace />} /> 
+        <Route path="/" element={<Navigate to="/connections" replace />} /> 
             <Route path="/insights" element={<Insights />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/connections" element={<Connections />} />
