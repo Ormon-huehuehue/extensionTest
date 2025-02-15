@@ -1,3 +1,4 @@
+import { loginWithLinkedIn } from '@src/pages/background/handleLogin';
 import React from 'react';
 
 const LoginScreen = () => {
@@ -69,6 +70,7 @@ const LoginScreen = () => {
             <button
               type="button"
               className="flex w-full justify-center rounded-md bg-linkedInBackground px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blueBackground cursor-pointer"
+              onClick ={()=>loginWithLinkedIn()}
             >
               Sign in with LinkedIn
             </button>

@@ -45,9 +45,10 @@
       "resources": [
         "contentStyle.css",
         "icon-128.png",
-        "icon-32.png"
+        "icon-32.png",
+        "src/pages/redirect/redirect.html"
       ],
-      "matches": []
+      "matches": ["<all_urls>"]
     }
   ]
 }

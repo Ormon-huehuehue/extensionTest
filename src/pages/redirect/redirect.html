@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirect</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Initialize Supabase client
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+    async function handleOAuthCallback() {
+      try {
+        // Retrieve the session after the OAuth redirect
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error("Error retrieving session:", error);
+          return;
+        }
+
+        if (session) {
+          console.log("User logged in:", session);
+          const accessToken = session.access_token;
+
+          // Send the access token to the background script
+          chrome.runtime.sendMessage({ type: 'OAUTH_SUCCESS', accessToken }, (response) => {
+            if (chrome.runtime.lastError) {
+              console.error("Error sending message to background script:", chrome.runtime.lastError);
+            } else {
+              console.log("Access token sent to background script");
+            }
+          });
+
+          // Close the popup after handling the OAuth callback
+          window.close();
+        } else {
+          console.error("No session found.");
+          window.close();
+        }
+      } catch (error) {
+        console.error("Error handling OAuth callback:", error);
+        window.close();
+      }
+    }
+
+    // Call the function to handle the OAuth callback
+    handleOAuthCallback();
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>
