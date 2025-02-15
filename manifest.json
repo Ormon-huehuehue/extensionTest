@@ -23,7 +23,7 @@
     "scripting"
   ],
   "background" : {
-    "service_worker": "src/pages/background"
+    "service_worker": "src/pages/background/index.ts"
   },
   "content_scripts": [
     {
