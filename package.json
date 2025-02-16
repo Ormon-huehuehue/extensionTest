@@ -17,6 +17,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.1",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",

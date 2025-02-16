@@ -42,6 +42,7 @@ export default function Popup() {
             <Route path = '/home/:panel' element={<HomeScreen/>}/>
             <Route path="/settings" element={<Settings />} />
             <Route path='/account/:method' element = {<AccountScreen/>} />
+            
       </Routes>
     </Router>
   );

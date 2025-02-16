@@ -1,11 +1,21 @@
-// Periodically check if the session is still valid
-import { supabase } from ".";
-
-
+import axios from "axios"
 
 setInterval(async () => {
     console.log("Checking valid session")
-    const { data: sessionData } = await supabase.auth.getSession();
+    const fetchSession = async () => {
+      const res = await axios.get("http://192.168.1.60:3000/api/auth/session");
+      console.log(res.data)
+    
+      const data = res.data;
+  
+      if (res.data.access_token) {
+        chrome.storage.local.set({ supabaseSession: data });
+      }
+    };
+
+    fetchSession(); 
+
+    const sessionData = await chrome.storage.local.get("supabaseSession");
     
     if (sessionData?.session) {
       console.log("Session is still valid:", sessionData);

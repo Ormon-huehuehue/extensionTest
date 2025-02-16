@@ -1,25 +1,43 @@
-import "./checkValidSession"
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-// import browser from "webextension-polyfill"
-
-const supabaseUrl: string = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey: string = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey);
-
+// import "./checkValidSession"
+import { supabase } from "@src/utils/supabase/supabase"
+import browser from "webextension-polyfill"
+import axios from "axios"
 
 console.log("Background script is runnign")
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.type === 'OAUTH_SUCCESS') {
-      const accessToken = message.accessToken;
-      console.log("Access token received:", accessToken);
+chrome.cookies.getAll({ domain: "http://192.168.1.60:3000" }, (cookies) => {
+    const authCookie = cookies.find((cookie) => cookie.name === "sb-bcdejivhebquhoaysqfm-auth-token.0");
   
-      // Store the access token in chrome.storage
-      chrome.storage.local.set({ accessToken }, () => {
-        console.log("Access token stored in chrome.storage");
-      });
-  
-      // Optionally, perform additional actions (e.g., update UI, fetch user data)
+    if (authCookie) {
+      console.log("Access Token:", authCookie.value);
+    } else {
+      console.log("No access token found.");
     }
-});;
+  });
+  
+
+
+console.log("Checking valid session")
+// const fetchSession = async () => {
+//     try {
+//       const res = await axios.get("http://192.168.1.60:3000/api/session");
+  
+//       console.log("Session data:", res.data);
+  
+//     //   if (res.data.access_token) {
+//     //     chrome.storage.local.set({ supabaseSession: res.data });
+//     //   }
+//     } catch (error) {
+//       console.error("Error fetching session:", );
+//     }
+//   };
+
+//   fetchSession();
+  
+
+  const getUser = async()=>{
+    const data = await supabase.auth.getUser();
+    console.log("User data :", data);
+}
+
+getUser();

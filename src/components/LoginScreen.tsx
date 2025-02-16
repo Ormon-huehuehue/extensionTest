@@ -11,7 +11,7 @@ const LoginScreen = () => {
       </div>
 
       <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-3" action="#" method="POST">
+        <form className="space-y-3" action="" method="POST">
           <div>
             <label htmlFor="email" className="block text-[12px] text-grayText">
               Email address
@@ -50,6 +50,7 @@ const LoginScreen = () => {
             <button
               type="button"
               className="flex w-full justify-center rounded-md bg-blueBackground px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blueBackground cursor-pointer"
+              formAction = ""
             >
               Login
             </button>

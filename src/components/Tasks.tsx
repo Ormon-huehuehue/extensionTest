@@ -1,5 +1,6 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import TaskElement from './TaskElement'
+import { supabase } from '@src/utils/supabase/supabase'
 
 const tasks = [
     {
@@ -22,6 +23,15 @@ const tasks = [
 
 const Tasks = () => {
 
+
+    useEffect(()=>{
+        const getUser = async()=>{
+            const data = await supabase.auth.getUser();
+            console.log("User data :", data);
+        }
+
+        getUser();
+    },[])
 
 
   return (
