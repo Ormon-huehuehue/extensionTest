@@ -1,24 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { HashRouter as Router, Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import browser from "webextension-polyfill";
-
 import Topbar from "@src/components/Topbar";
-import Navbar from "@src/components/Navbar";
 import Settings from "../Settings/Settings";
-import Task from "@src/components/TaskElement";
-import Insights from "@src/components/Insights";
-import Tasks from "@src/components/Tasks";
-import Connections from "@src/components/Connections";
-import LoginScreen from "@src/components/LoginScreen";
 import HomeScreen from "@src/components/HomeScreen";
-import SignupScreen from "@src/components/SignupScreen";
 import AccountScreen from "@src/components/AccountScreen";
+import { supabase } from "@src/utils/supabase/supabase";
 
 
 
 
 export default function Popup() {
   const [apiKeyPresent, setApiKeyPresent] = useState<boolean>(false);
+
+
 
   useEffect(() => {
     const checkApiKey = async () => {
@@ -34,7 +29,7 @@ export default function Popup() {
     <Router>
       <div >
         <div className="w-full h-full text-center text-black justify-center items-center">
-          <Topbar />
+          <Topbar/>
         </div>
       </div>
       <Routes>
@@ -42,7 +37,6 @@ export default function Popup() {
             <Route path = '/home/:panel' element={<HomeScreen/>}/>
             <Route path="/settings" element={<Settings />} />
             <Route path='/account/:method' element = {<AccountScreen/>} />
-            
       </Routes>
     </Router>
   );

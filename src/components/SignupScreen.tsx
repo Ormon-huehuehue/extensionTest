@@ -75,7 +75,7 @@ const SignupScreen = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-gray-300 placeholder-gray-400 focus:outline-blueBackground sm:text-sm"
+              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border-2 border-grayBorder placeholder-gray-400 focus:outline-blueBackground sm:text-sm"
             />
           </div>
           
@@ -89,7 +89,7 @@ const SignupScreen = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-gray-300 placeholder-gray-400 focus:outline-blueBackground sm:text-sm"
+              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border-2 border-grayBorder placeholder-gray-400 focus:outline-blueBackground sm:text-sm"
             />
           </div>
 
@@ -103,7 +103,7 @@ const SignupScreen = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-gray-300 placeholder-gray-400 focus:outline-blueBackground sm:text-sm"
+              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border-2 border-grayBorder placeholder-gray-400 focus:outline-blueBackground sm:text-sm"
             />
           </div>
 

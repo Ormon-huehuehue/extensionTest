@@ -3,23 +3,31 @@ import logo from "../assets/img/extension-logo.png"
 import { VscAccount } from "react-icons/vsc";
 import { Link, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { supabase } from '@src/utils/supabase/supabase';
+import { useNavigate } from 'react-router-dom';
 
 const Topbar = () => {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        console.log("Session : ", user)
+        setIsLoggedIn(true);
+        navigate("/home/Tasks");
+      }
+    };
+    checkUser();
+  }, []);
 
 
   const location = useLocation();
   const method = location.pathname.split("/")[2]; // Extracts "login" or "signup"
 
 
-
-  useEffect(()=>{
-    const token = localStorage.getItem('token')
-    if(token){
-      setIsLoggedIn(true)
-    }
-  },[])
 
   return (
     <div className= 'w-screen flex justify-between py-1 px-5 border-b-2 border-grayBorder '>
