@@ -38,7 +38,7 @@
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.30",
     "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/vite": "^4.0.3",
+    "@tailwindcss/vite": "^4.0.7",
     "@types/chrome": "^0.0.300",
     "@types/node": "^22.13.0",
     "@types/react": "^19.0.8",
