@@ -1,19 +1,16 @@
-import { redirect } from "react-router-dom";
-import { createClient } from "./utils/supabase/server";
+import { supabase } from "./utils/supabase/supabase";
 
-export const signInAction = async (formData: FormData) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const supabase = await createClient();
-  
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-  
-    if (error) {
-      console.error("Error signing in:", error.message);
-    }
-  
-    return redirect("/protected");
-  };
+export async function signUpNewUser(email: string, password: string) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
+
+  if (error) {
+    console.error("Signup error:", error);
+    return { success: false, error }; // Ensure function always returns something
+  }
+
+  console.log("Signup successful:", data);
+  return { success: true, data }; // Return success response
+}

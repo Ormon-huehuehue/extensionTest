@@ -1,3 +1,4 @@
+import { supabase } from "@src/utils/supabase/supabase";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import browser from 'webextension-polyfill';
 
@@ -14,6 +15,7 @@ export async function loginWithLinkedIn() {
     console.error("Login failed:", error);
   }
 }
+
 
 
 
