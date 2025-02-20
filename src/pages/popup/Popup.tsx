@@ -6,6 +6,7 @@ import Settings from "../Settings/Settings";
 import HomeScreen from "@src/components/HomeScreen";
 import AccountScreen from "@src/components/AccountScreen";
 import { supabase } from "@src/utils/supabase/supabase";
+import OnboardingSurvey from "@src/components/OnboardingSurvey";
 
 
 
@@ -33,10 +34,11 @@ export default function Popup() {
         </div>
       </div>
       <Routes>
-        <Route path="/" element={<Navigate to="/home/Tasks" replace />} /> 
-            <Route path = '/home/:panel' element={<HomeScreen/>}/>
-            <Route path="/settings" element={<Settings />} />
-            <Route path='/account/:method' element = {<AccountScreen/>} />
+          <Route path="/" element={<Navigate to="/home/Tasks" replace />} /> 
+          <Route path = '/home/:panel' element={<HomeScreen/>}/>
+          <Route path="/settings" element={<Settings />} />
+          <Route path='/account/:method' element = {<AccountScreen/>} />
+          <Route path="/onboarding-survey" element = {<OnboardingSurvey/>} />
       </Routes>
     </Router>
   );
