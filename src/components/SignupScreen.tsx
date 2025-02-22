@@ -21,7 +21,7 @@ const SignupScreen = () => {
       if (user) {
         console.log("Session : ", user)
         setIsLoggedIn(true);
-        navigate("/home/Tasks");
+        navigate("/onboarding-survey");
       }
     };
     
