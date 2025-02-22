@@ -44,11 +44,17 @@ const Topbar = () => {
 
   return (
     <div className= 'w-screen flex justify-between py-1 px-5 border-b-2 border-grayBorder '>
-        <Link to="/home/Tasks" className="px-4 py-2 ">
-        <div className= 'flex '>
-            <img src= {logo} alt="" width={40} height={40}/>
-        </div>
-        </Link>
+      {isLoggedIn ? 
+      <Link to="/home/Tasks" className="px-4 py-2 ">
+      <div className= 'flex '>
+          <img src= {logo} alt="" width={40} height={40}/>
+      </div>
+      </Link> : 
+      <div className= 'flex '>
+        <img src= {logo} alt="" width={40} height={40}/>
+      </div>
+      }
+        
         <div className= 'flex items-center justify-center text-center hover:cursor-pointer'>
         {isLoggedIn ? (
           <Link to="/settings" className="px-4 py-2">

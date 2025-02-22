@@ -1,4 +1,5 @@
 import { supabase } from "./utils/supabase/supabase";
+import { prisma } from "./utils/prismaClient";
 
 export async function signUpNewUser(email: string, password: string) {
   const { data, error } = await supabase.auth.signUp({
@@ -6,13 +7,42 @@ export async function signUpNewUser(email: string, password: string) {
     password,
   });
 
+  
   if (error) {
     console.error("Signup error:", error);
     return { success: false, error }; // Ensure function always returns something
   }
 
+  // const user = await prisma.user.create({
+  //   data: {
+  //     email : email
+  //   },
+  // });
+  // console.log("prisma user : ", user)
+
+  addUserToDatabase(email);
+
   console.log("Signup successful:", data);
-  return { success: true, data }; // Return success response
+
+  return { success: true, data }; 
+}
+
+const addUserToDatabase = async (email: string) => {
+  const { data, error } = await supabase
+    .from("users-data")
+    .insert({
+      email,
+      userLevel: "2"
+    })
+    .select();
+
+  if (error) {
+    console.error("Couldn't add user to the database, error:", error);
+    return new Error(`Couldn't add user to the database: ${error.message}`);
+  }
+
+  console.log("User added to the database successfully: ", data);
+  return data; 
 }
 
 
@@ -28,6 +58,9 @@ export async function signInUser(email: string, password: string) {
     }
   
     console.log("Signin successful:", data);
+
+
+
     return { success: true, data }; // Return success response
   }
   
