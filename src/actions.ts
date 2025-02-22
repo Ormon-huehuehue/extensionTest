@@ -13,26 +13,30 @@ export async function signUpNewUser(email: string, password: string) {
     return { success: false, error }; // Ensure function always returns something
   }
 
-  // const user = await prisma.user.create({
-  //   data: {
-  //     email : email
-  //   },
-  // });
-  // console.log("prisma user : ", user)
-
-  addUserToDatabase(email);
-
   console.log("Signup successful:", data);
 
   return { success: true, data }; 
 }
 
-const addUserToDatabase = async (email: string) => {
+export const getUserLevel = async (email : string)=>{
+  const { data, error } = await supabase
+  .from('users-data')
+  .select('userLevel')
+  .eq('email', email)
+  if (error) {
+    console.error("Couldn't get user level, error:", error);
+    return new Error(`Couldn't get user level: ${error.message}`);
+  }
+  console.log("User level retrieved successfully: ", data);
+  return data;
+}
+
+export const addUserToDatabase = async (email: string, userLevel : string) => {
   const { data, error } = await supabase
     .from("users-data")
     .insert({
       email,
-      userLevel: "2"
+      userLevel
     })
     .select();
 

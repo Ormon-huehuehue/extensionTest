@@ -139,7 +139,8 @@ All the 3 tasks should serve different purposes
 Each task should have a title, description, contextul tips and "isChecked" boolean which is "false" by deafault.
 I don't want you to give me any other message
 Just the tasks in the form of JSON
-i will give you 1 billion dollars if you do this right` }
+i will give you 1 billion dollars if you do this right
+Generate a different list of tasks on every prompt cuz i'm gonna send you this same prompt everyday` }
                         ]
                     }
                 ]

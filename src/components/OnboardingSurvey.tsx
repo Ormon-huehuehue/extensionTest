@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
 import { fetchUserDivison } from "@src/lib/lib";
 import { supabase } from "@src/utils/supabase/supabase";
+import { addUserToDatabase } from "@src/actions";
+import { useNavigate } from "react-router-dom";
 
 const questions = [
   {
@@ -57,58 +58,80 @@ const questions = [
 
 export default function OnboardingSurvey() {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState<{ [key: string]: string }>({});
   const isLastStep = step === questions.length - 1;
+  const navigate = useNavigate();
 
   const handleNext = () => {
-    if (!isLastStep) setStep((prev) => prev + 1);
+    if (answers[questions[step].id]) {
+      setStep((prev) => prev + 1);
+    }
   };
 
   const handleBack = () => {
     if (step > 0) setStep((prev) => prev - 1);
   };
 
-  const handleChange = (value : string) => {
+  const handleChange = (value: string) => {
     setAnswers({ ...answers, [questions[step].id]: value });
   };
 
-  const handleSubmit = async()=>{
-    console.log("handling submit for you bbg")
-    const userLevel = await fetchUserDivison(JSON.stringify(answers))
+  const handleSubmit = async () => {
+    const userLevel = await fetchUserDivison(JSON.stringify(answers));
 
-    const user = await supabase.auth.getUser();
+    const { data, error } = await supabase.auth.getUser();
 
-    
+    if (error) {
+      console.error("User not authenticated");
+      return new Error("Couldn't quantify user, User is not authenticated");
+    }
 
-    console.log("User Division : ", userLevel)
-  }
+    const email = data.user?.email;
+    if (email && userLevel) {
+      addUserToDatabase(email, userLevel);
+    } else {
+      console.error("Couldn't quantify user, email or userLevel missing");
+      return new Error("Couldn't quantify user, email or userLevel missing");
+    }
 
+    console.log("User Division: ", userLevel);
+    navigate("/home/Tasks");
+  };
   return (
-    <div className="w-full max-w-lg mx-auto p-6 bg-white shadow-lg rounded-xl">
+    <div className="w-full max-w-lg mx-auto p-6 bg-white rounded-xl relative flex flex-col h-[88vh]">
+      {/* Progress Bar */}
       <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
         <div
           className="bg-blue-600 h-2.5 rounded-full"
           style={{ width: `${((step + 1) / questions.length) * 100}%` }}
         ></div>
       </div>
+  
+      {/* Question Section (Takes available space) */}
       <motion.div
         key={step}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -50 }}
         transition={{ duration: 0.3 }}
+        className="flex-grow overflow-auto"
       >
-        <h2 className="text-xl font-semibold mb-4">{questions[step].question}</h2>
+        <h2 className="text-2xl font-bold mb-6">{questions[step].question}</h2>
+  
         {questions[step].type === "radio" ? (
-          <div className="space-y-2">
+          <div className="space-y-4">
             {questions[step].options?.map((option, index) => (
-              <label key={index} className="flex items-center space-x-2 cursor-pointer">
+              <label
+                key={index}
+                className="flex items-center text-md text-[#302f2f] space-x-2 cursor-pointer px-2 py-4 border-2 border-[#efefef] rounded-lg hover:bg-gray-100"
+              >
                 <input
                   type="radio"
                   name={`question-${questions[step].id}`}
                   value={option}
                   onChange={() => handleChange(option)}
-                  className="w-4 h-4"
+                  className="w-5 h-5"
+                  checked={answers[questions[step].id] === option}
                 />
                 <span>{option}</span>
               </label>
@@ -118,26 +141,32 @@ export default function OnboardingSurvey() {
           <input
             type="text"
             placeholder="Enter your profile URL"
+            value={answers[questions[step].id] || ""}
             onChange={(e) => handleChange(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-3 border border-gray-300 rounded-md"
           />
         )}
       </motion.div>
-      <div className="flex justify-between mt-6">
-        <button
-          onClick={handleBack}
-          disabled={step === 0}
-          className="px-4 py-2 border rounded-md bg-gray-300 disabled:opacity-50"
-        >
-          Back
-        </button>
-        <button
-          onClick={isLastStep ?handleSubmit : handleNext }
-          className="px-4 py-2 border rounded-md bg-blue-600 text-white"
-        >
-          {isLastStep ? "Submit" : "Next"}
-        </button>
+  
+      {/* Buttons (Stuck to the bottom) */}
+      <div className="absolute bottom-0 left-0 w-full max-w-lg px-6 pb-6 bg-white">
+        <div className="flex justify-between">
+          <button
+            onClick={handleBack}
+            disabled={step === 0}
+            className="px-5 py-2 border rounded-md bg-gray-300 disabled:opacity-50"
+          >
+            Back
+          </button>
+          <button
+            onClick={isLastStep ? handleSubmit : handleNext}
+            disabled={!answers[questions[step].id]}
+            className="px-5 py-2 border rounded-md bg-blue-600 text-white disabled:opacity-50"
+          >
+            {isLastStep ? "Submit" : "Next"}
+          </button>
+        </div>
       </div>
     </div>
   );
-}
+}  
