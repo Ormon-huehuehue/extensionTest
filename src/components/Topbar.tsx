@@ -1,27 +1,40 @@
 import React, { useEffect, useState } from 'react'
 import logo from "../assets/img/extension-logo.png"
 import { VscAccount } from "react-icons/vsc";
-import { Link, useParams } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from '@src/utils/supabase/supabase';
-import { useNavigate } from 'react-router-dom';
 
 const Topbar = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
+  const checkUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      setIsLoggedIn(true);
+    }else{
+      setIsLoggedIn(false);
+    }
+  };
+
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        console.log("Session : ", user)
-        setIsLoggedIn(true);
-        navigate("/home/Tasks");
+    checkUser(); // Check user on component mount
+
+    // Set up message event listener
+    const handleMessage = (event : MessageEvent) => {
+      if (event.data === 'checkUser') { 
+        checkUser();
       }
     };
-    checkUser();
-  }, []);
+
+    window.addEventListener('message', handleMessage);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [navigate]);
 
 
   const location = useLocation();

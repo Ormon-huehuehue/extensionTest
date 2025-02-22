@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { fetchUserDivison } from "@src/lib/lib";
+import { supabase } from "@src/utils/supabase/supabase";
 
 const questions = [
   {
@@ -74,6 +75,10 @@ export default function OnboardingSurvey() {
   const handleSubmit = async()=>{
     console.log("handling submit for you bbg")
     const userLevel = await fetchUserDivison(JSON.stringify(answers))
+
+    const user = await supabase.auth.getUser();
+
+    
 
     console.log("User Division : ", userLevel)
   }

@@ -21,7 +21,8 @@ export default function Settings() {
     setLoading(true);
     try {
       await signOut();
-      navigate("/"); // Redirect to home after sign out
+      window.postMessage('checkUser', '*');
+      navigate("/account/login"); 
     } catch (error) {
       console.error("Sign out failed:", error);
     } finally {
