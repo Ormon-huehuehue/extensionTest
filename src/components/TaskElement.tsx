@@ -9,6 +9,25 @@ const TaskElement = ({ title, description, contextualTips, isChecked }: { title:
     if (!checked) setExpanded(!expanded);
   };
 
+  const handleCheckboxClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setChecked(!checked);
+    setExpanded(false);
+
+    const task = localStorage.getItem("dailyTasks");
+    if (task) {
+      const parsedTask = JSON.parse(task);
+      //@ts-expect-error t has type "any"
+      const updatedTask = parsedTask.map((t) => {
+        if (t.title === title) {
+          return { ...t, isChecked: !checked };
+        }
+        return t;
+      });
+      localStorage.setItem("dailyTasks", JSON.stringify(updatedTask));
+    }
+  };
+
   return (
     <motion.div
       layout="position"
@@ -22,9 +41,7 @@ const TaskElement = ({ title, description, contextualTips, isChecked }: { title:
               checked ? "bg-blue-500 border-blue-500" : "border-gray-400"
             }`}
             onClick={(e) => {
-              e.stopPropagation();
-              setChecked(!checked);
-              setExpanded(false);
+              handleCheckboxClick(e);
             }}
           >
             {checked && (
