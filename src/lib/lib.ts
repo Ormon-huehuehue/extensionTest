@@ -1,3 +1,4 @@
+import { supabase } from "@src/utils/supabase/supabase";
 import axios from "axios";
 import browser from 'webextension-polyfill';
 
@@ -133,10 +134,12 @@ Saturday (Content Creation & Planning - 1.5 Hours Total)
     Intermediate (2): Create 2-3 original posts and schedule them.
     Advanced (3): Produce long-form thought leadership content (articles, newsletters, videos).
 
-Based on  this SOP and give me tasks for a linkedIn user of level ${userLevel} ,
+Based on this SOP and give me tasks for a linkedIn user of level ${userLevel} ,
+feel free to deviate from the SOP a bit to make the tasks more engaging for the user, do not give similar tasks, every task should be different
 I need 3 DAILY tasks with contexual tips in the form of json
 All the 3 tasks should serve different purposes
 Each task should have a title, description, contextul tips and "isChecked" boolean which is "false" by deafault.
+The description should be very concise.
 I don't want you to give me any other message
 Just the tasks in the form of JSON
 i will give you 1 billion dollars if you do this right
@@ -159,5 +162,31 @@ Generate a different list of tasks on every prompt cuz i'm gonna send you this s
     } catch (error) {
         console.error("Error fetching suggestion:", error);
         return "Failed to generate suggestion. Please try again.";
+    }
+}
+
+
+export async function addCommentToDatabase(){
+    try{
+        console.log("adding comment to database")
+        const {data, error} = await supabase.auth.getSession();
+        if(error){
+            console.error("Error adding comment, user not logged in")
+            return new Error("User not logged in");
+        }
+        const {data: commentData, error: commentError} = await supabase
+        .from('comments')
+        .insert([
+            { user_id: data?.session?.user.id}
+            // { user_id: "test"}
+        ])
+        .select()
+        if(commentError){
+            return new Error("Error adding comment to database");
+        }
+        return commentData;
+    } catch (error) {
+        console.error("Error adding comment to database:", error);
+        return new Error("Error adding comment to database");
     }
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { signUpNewUser } from '@src/actions';
 import { supabase } from '@src/utils/supabase/supabase';
 import { useNavigate } from 'react-router-dom';
+import browser from "webextension-polyfill"
 
 const SignupScreen = () => {
   const [email, setEmail] = useState('');
@@ -39,6 +40,15 @@ const SignupScreen = () => {
     setError(null);
     
     try {
+
+      browser.runtime.sendMessage({
+        type: "SIGNUP",
+        email: email,
+        password: password
+      }).then((response) => {
+        console.log("content script response : ", response)
+      })
+
       const response = await signUpNewUser(email, password);
       
       console.log("Response : ", response)

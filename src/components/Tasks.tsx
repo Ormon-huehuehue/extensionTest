@@ -14,6 +14,44 @@ const Tasks = () => {
     const [tasks, setTasks] = useState<tasksProps[] | null>(null);
     const [userLevel, setUserLevel] = useState<string | null>(null);
 
+
+    useEffect(() => {
+        const getUser = async () => {
+            const {data, error : authError} = await supabase.auth.getUser();
+            console.log("User data:", data);
+
+            if(authError){
+                console.error("Error fetching user data:", authError);
+                return;
+            }
+
+            setUserLevel(localStorage.getItem("userLevel"));
+
+            try{
+
+                const { data: userData, error } = await supabase
+                .from('users-data')
+                .select('userLevel, email')
+                .eq('email', data.user?.email);
+                
+                console.log("users-data table :", userData)
+                if (error) {
+                    console.error("Error fetching user level:", error);
+                } else {
+                    console.log("User level : ", userData[0].userLevel)
+                    console.log("User email : ", userData[0].email);
+                    localStorage.setItem('userLevel', userData[0].userLevel);
+                    setUserLevel(userData[0].userLevel);
+                }
+            }
+            catch(error){
+                console.error("Error fetching user level:", error);
+            }
+        };
+
+        getUser();
+    }, []);
+
     useEffect(() => {
         const loadTasks = async () => {
             try {
@@ -38,25 +76,6 @@ const Tasks = () => {
 
         loadTasks();
     }, [userLevel]);
-
-    useEffect(() => {
-        const getUser = async () => {
-            const data = await supabase.auth.getUser();
-            console.log("User data:", data);
-
-            const { data: userData, error } = await supabase
-                .from('users-data')
-                .select('userLevel')
-                .eq('email', data.data.user?.email);
-            if (error) {
-                console.error("Error fetching user level:", error);
-            } else {
-                setUserLevel(userData[0].userLevel);
-            }
-        };
-
-        getUser();
-    }, []);
 
     return (
         <div className='h-full flex flex-col gap-3 mb-5'>

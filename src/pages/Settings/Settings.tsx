@@ -20,6 +20,8 @@ export default function Settings() {
   const handleSignOut = async () => {
     setLoading(true);
     try {
+      localStorage.removeItem("dailyTasks")
+      localStorage.removeItem("userLevel")
       await signOut();
       window.postMessage('checkUser', '*');
       navigate("/account/login"); 

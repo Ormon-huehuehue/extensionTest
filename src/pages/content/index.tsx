@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./style.css";
-import { fetchGeminiSuggestion } from "@src/lib/lib";
+import { addCommentToDatabase, fetchGeminiSuggestion } from "@src/lib/lib";
+import browser from "webextension-polyfill";
+import { supabase } from "@src/utils/supabase/supabase";
+import { signUpNewUser } from "@src/actions";
 
 // Ensure we don't inject multiple root elements
 if (!document.getElementById("__react_root")) {
@@ -27,17 +30,14 @@ const App = () => {
       textBox?.querySelector(".ai-icon")?.remove();
     };
 
-    const handleClick = (event: FocusEvent) => {
-      // console.log("HandleClick ran")
-      // const textBox = event.target as HTMLElement;
-      // setActiveTextBox(textBox); // Store the active text box reference
-
-      // // Find the nearest post container and extract the description
-      // const postContainer = textBox.closest(".feed-shared-update-v2");
-      // const description = postContainer?.querySelector(".feed-shared-update-v2__description")?.textContent?.trim();
-
-      // console.log("Focused post description:", description);
-      // setPostData(description || null);
+    const handleCommentButton = (event: FocusEvent) => {
+      console.log("Comment button clicked")
+      //@ts-expect-error sendMessage type error
+      browser.runtime.sendMessage({ action: "addComment" },
+        ()=>console.log("Message sent")
+      );
+      
+      addCommentToDatabase();
     };
 
     const handleAiButtonClick = (event : FocusEvent)=>{
@@ -83,10 +83,19 @@ const App = () => {
 
           
           (textBox as HTMLElement).dataset.listenerAdded = "true";
-          (textBox as HTMLElement).addEventListener("click", handleClick);
           (textBox as HTMLElement).addEventListener("blur", handleBlur);
         }
       });
+
+      const commentSubmitButtons = document.querySelectorAll('.comments-comment-box__submit-button--cr.artdeco-button--primary')
+      commentSubmitButtons.forEach((button) =>{
+        if(!(button as HTMLElement).dataset.listenerAdded){
+          (button as HTMLElement).dataset.listenerAdded = "true";
+          (button as HTMLElement).addEventListener("click", handleCommentButton);
+        }
+      })
+
+
     };
 
     const observeDOMChanges = () => {
@@ -105,7 +114,6 @@ const App = () => {
     return () => {
       observer.disconnect(); // Cleanup MutationObserver when unmounting
       document.querySelectorAll(".comments-comment-box-comment__text-editor").forEach((textBox) => {
-        (textBox as HTMLElement).removeEventListener("click", handleClick);
         (textBox as HTMLElement).removeEventListener("blur", handleBlur);
       });
     };
@@ -148,6 +156,10 @@ const App = () => {
     }
   }, [generatedComment, activeTextBox]);
 
+
+
+
+  
   return (
     <div>
     </div>

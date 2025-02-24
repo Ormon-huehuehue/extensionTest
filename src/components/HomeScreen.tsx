@@ -16,13 +16,7 @@ const HomeScreen = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-    // const [activePanel, setActivePanel] = useState(panel);
-    
-    // useEffect(()=>{
-    //     const {panel} = useParams();
-    //     console.log("Panel :", panel)
-    //     setActivePanel(panel as panelType);
-    // }, [panel])
+ 
 
     useEffect(() => {
       const checkUser = async () => {

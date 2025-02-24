@@ -26,6 +26,9 @@ const Topbar = () => {
       if (event.data === 'checkUser') { 
         checkUser();
       }
+      if(event.data === "addComment"){
+        console.log("Add comment")
+      }
     };
 
     window.addEventListener('message', handleMessage);
