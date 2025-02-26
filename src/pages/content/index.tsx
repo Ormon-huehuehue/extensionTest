@@ -30,14 +30,16 @@ const App = () => {
       textBox?.querySelector(".ai-icon")?.remove();
     };
 
-    const handleCommentButton = (event: FocusEvent) => {
+    const handleCommentButton = async (event: FocusEvent) => {
       console.log("Comment button clicked")
       //@ts-expect-error sendMessage type error
       browser.runtime.sendMessage({ action: "addComment" },
         ()=>console.log("Message sent")
       );
       
-      addCommentToDatabase();
+      const commentResponse = await addCommentToDatabase();
+      console.log("Comment response", commentResponse);
+      
     };
 
     const handleAiButtonClick = (event : FocusEvent)=>{

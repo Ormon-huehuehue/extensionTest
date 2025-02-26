@@ -166,27 +166,29 @@ Generate a different list of tasks on every prompt cuz i'm gonna send you this s
 }
 
 
-export async function addCommentToDatabase(){
-    try{
-        console.log("adding comment to database")
-        const {data, error} = await supabase.auth.getSession();
-        if(error){
-            console.error("Error adding comment, user not logged in")
-            return new Error("User not logged in");
-        }
-        const {data: commentData, error: commentError} = await supabase
-        .from('comments')
-        .insert([
-            { user_id: data?.session?.user.id}
-            // { user_id: "test"}
-        ])
-        .select()
-        if(commentError){
-            return new Error("Error adding comment to database");
-        }
-        return commentData;
+export async function addCommentToDatabase() {
+    try {
+        console.log("Adding comment timestamp to local storage");
+
+        // Get the current timestamp
+        const timestamp = new Date().toISOString();
+
+        // Retrieve existing timestamps from chrome.storage.local using promises
+        const result = await chrome.storage.local.get("commentTimestamps");
+        let timestamps: string[] = result.commentTimestamps || [];
+
+        // Add new timestamp to the array
+        timestamps.push(timestamp);
+
+        // Save back to storage
+        await chrome.storage.local.set({ commentTimestamps: timestamps });
+
+        console.log("Comment timestamp saved:", timestamp);
+        return timestamp;
     } catch (error) {
-        console.error("Error adding comment to database:", error);
-        return new Error("Error adding comment to database");
+        console.error("Error saving comment timestamp:", error);
+        return new Error("Error saving comment timestamp");
     }
 }
+
+
