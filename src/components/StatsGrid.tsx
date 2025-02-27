@@ -2,19 +2,25 @@ import React, { useEffect, useState } from "react";
 
 const StatsGrid = () => {
   const [commentsPosted, setCommentsPosted] = useState(0);
+  const [postsPublished, setPostsPublished] = useState(0);
 
   useEffect(() => {
     chrome.storage.local.get(["commentTimestamps"], (result) => {
       const timestamps = result.commentTimestamps || [];
       setCommentsPosted(timestamps.length);
     });
+
+    chrome.storage.local.get(["postTimeStamps"], (result) => {
+      const timestamps = result.postTimeStamps || [];
+      setPostsPublished(timestamps.length);
+    })
   }, []);
 
   const stats = [
     { value: "23", label: "New Connections" },
     { value: "50", label: "Number of Follow" },
     { value: commentsPosted, label: "Comments Posted" },
-    { value: "11", label: "Posts & Articles Published" },
+    { value: postsPublished, label: "Posts & Articles Published" },
   ];
 
   return (

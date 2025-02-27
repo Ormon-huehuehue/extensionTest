@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./style.css";
-import { addCommentToDatabase, fetchGeminiSuggestion } from "@src/lib/lib";
+import { addCommentToLocalStorage, addPostToLocalStorage, fetchGeminiSuggestion } from "@src/lib/lib";
 import browser from "webextension-polyfill";
 import { supabase } from "@src/utils/supabase/supabase";
 import { signUpNewUser } from "@src/actions";
@@ -24,46 +24,62 @@ const App = () => {
   const [generatedComment, setGeneratedComment] = useState<string | null>(null);
   const [activeTextBox, setActiveTextBox] = useState<HTMLElement | null>(null);
 
+  const handleCommentButton = async (event: FocusEvent) => {
+    console.log("Comment button clicked")
+    //@ts-expect-error sendMessage type error
+    browser.runtime.sendMessage({ action: "addComment" },
+      ()=>console.log("Message sent")
+    );
+    
+    const commentResponse = await addCommentToLocalStorage();
+    console.log("Comment response", commentResponse);
+  };
+
+  const handlePostButton = async (event: MouseEvent) => {
+    console.log("Post button clicked");
+  
+    const target = event.target as HTMLElement;
+  
+    if (target.classList.contains("artdeco-button--disabled")) {
+      console.log("Button is disabled");
+    } else {
+    
+      
+      const postResponse = await addPostToLocalStorage();
+      console.log("POST response", postResponse);
+    }
+  };
+  
+  
+
+  const handleAiButtonClick = (event : FocusEvent)=>{
+   
+    const button = event.target as HTMLElement;
+    const textBox = button.closest(".comments-comment-box-comment__text-editor") as HTMLElement;
+    if(textBox){
+      setActiveTextBox(textBox);
+    }
+
+     // Find the nearest post container and extract the description
+     const postContainer = textBox.closest(".feed-shared-update-v2");
+     const description = postContainer?.querySelector(".feed-shared-update-v2__description")?.textContent?.trim();
+
+     
+     setPostData(description || null);
+  }
+
   useEffect(() => {
     const handleBlur = (event: FocusEvent) => {
       const textBox = event.target as HTMLElement;
       textBox?.querySelector(".ai-icon")?.remove();
     };
 
-    const handleCommentButton = async (event: FocusEvent) => {
-      console.log("Comment button clicked")
-      //@ts-expect-error sendMessage type error
-      browser.runtime.sendMessage({ action: "addComment" },
-        ()=>console.log("Message sent")
-      );
-      
-      const commentResponse = await addCommentToDatabase();
-      console.log("Comment response", commentResponse);
-      
-    };
-
-    const handleAiButtonClick = (event : FocusEvent)=>{
-     
-      const button = event.target as HTMLElement;
-      const textBox = button.closest(".comments-comment-box-comment__text-editor") as HTMLElement;
-      if(textBox){
-        setActiveTextBox(textBox);
-      }
-
-       // Find the nearest post container and extract the description
-       const postContainer = textBox.closest(".feed-shared-update-v2");
-       const description = postContainer?.querySelector(".feed-shared-update-v2__description")?.textContent?.trim();
- 
-       
-       setPostData(description || null);
-    }
-
     const attachEventListeners = () => {
       const textBoxList = document.querySelectorAll(".comments-comment-box-comment__text-editor");
       textBoxList.forEach((textBox) => {
         if (!(textBox as HTMLElement).dataset.listenerAdded) {
 
-          if (!textBox.querySelector(".ai-icon")) { // Prevent duplicate icons
+          if (!textBox.querySelector(".ai-icon")) {
             const container = document.createElement("div");
             container.className = "ai-icon";
             container.setAttribute(
@@ -97,6 +113,10 @@ const App = () => {
         }
       })
 
+      const postButtons = document.querySelectorAll(".share-box_actions button")
+      postButtons.forEach((button)=>{
+        (button as HTMLElement).addEventListener("click", handlePostButton)
+      })
 
     };
 
@@ -157,9 +177,6 @@ const App = () => {
       setGeneratedComment(""); // Reset generated comment after insertion
     }
   }, [generatedComment, activeTextBox]);
-
-
-
 
   
   return (

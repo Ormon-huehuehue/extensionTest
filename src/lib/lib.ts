@@ -166,7 +166,7 @@ Generate a different list of tasks on every prompt cuz i'm gonna send you this s
 }
 
 
-export async function addCommentToDatabase() {
+export async function addCommentToLocalStorage() {
     try {
         console.log("Adding comment timestamp to local storage");
 
@@ -192,3 +192,27 @@ export async function addCommentToDatabase() {
 }
 
 
+export async function addPostToLocalStorage() {
+    try {
+        console.log("Adding post timestamp to local storage");
+
+        // Get the current timestamp
+        const timestamp = new Date().toISOString();
+
+        // Retrieve existing timestamps from chrome.storage.local using promises
+        const result = await chrome.storage.local.get("postTimeStamps");
+        let timestamps: string[] = result.postTimeStamps || [];
+
+        // Add new timestamp to the array
+        timestamps.push(timestamp);
+
+        // Save back to storage
+        await chrome.storage.local.set({ postTimeStamps: timestamps });
+
+        console.log("Post timestamp saved:", timestamp);
+        return timestamp;
+    } catch (error) {
+        console.error("Error saving POST timestamp:", error);
+        return new Error("Error saving POST timestamp");
+    }
+}
