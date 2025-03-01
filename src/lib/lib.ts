@@ -42,7 +42,7 @@ export async function fetchGeminiSuggestion(postText: string): Promise<string> {
 }
 
 
-export async function fetchUserDivison(surveyResponse: string): Promise<string> {
+export async function fetchUserDivision(surveyResponse: string): Promise<string> {
     try {
         // Get API Key from Chrome Storage
         const apiKey = await (async () => {
@@ -155,8 +155,6 @@ Generate a different list of tasks on every prompt cuz i'm gonna send you this s
 
         // Extract response correctly
         const comment = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response from Gemini.";
-
-        console.log("Tasks :", comment)
         return comment;
         
     } catch (error) {

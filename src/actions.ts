@@ -31,12 +31,13 @@ export const getUserLevel = async (email : string)=>{
   return data;
 }
 
-export const addUserToDatabase = async (email: string, userLevel : string) => {
+export const addUserToDatabase = async (email: string, userLevel : string, linkedInUrl : string) => {
   const { data, error } = await supabase
     .from("users-data")
     .insert({
       email,
-      userLevel
+      userLevel,
+      linkedInUrl
     })
     .select();
 

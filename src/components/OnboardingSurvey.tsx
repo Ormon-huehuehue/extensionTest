@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { fetchUserDivison } from "@src/lib/lib";
+import { fetchUserDivision } from "@src/lib/lib";
 import { supabase } from "@src/utils/supabase/supabase";
 import { addUserToDatabase } from "@src/actions";
 import { useNavigate } from "react-router-dom";
@@ -77,7 +77,7 @@ export default function OnboardingSurvey() {
   };
 
   const handleSubmit = async () => {
-    const userLevel = await fetchUserDivison(JSON.stringify(answers));
+    const userLevel = await fetchUserDivision(JSON.stringify(answers));
 
     const { data, error } = await supabase.auth.getUser();
 
@@ -87,8 +87,12 @@ export default function OnboardingSurvey() {
     }
 
     const email = data.user?.email;
-    if (email && userLevel) {
-      addUserToDatabase(email, userLevel);
+    const linkedInProfileUrl = answers["profileUrl"]; 
+    console.log("LinkedIn Profile URL: ", linkedInProfileUrl);
+
+    if (email && userLevel && linkedInProfileUrl) {
+      localStorage.setItem("profileUrl", linkedInProfileUrl);
+      addUserToDatabase(email, userLevel, linkedInProfileUrl);
     } else {
       console.error("Couldn't quantify user, email or userLevel missing");
       return new Error("Couldn't quantify user, email or userLevel missing");

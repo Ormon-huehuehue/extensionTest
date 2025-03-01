@@ -1,8 +1,34 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios"
 
 const StatsGrid = () => {
   const [commentsPosted, setCommentsPosted] = useState(0);
   const [postsPublished, setPostsPublished] = useState(0);
+
+
+  const fetchUserStats = async () =>{
+    const linkedInProfileUrl = localStorage.getItem("profileUrl");
+    console.log("LinkedIn Profile URL:", linkedInProfileUrl);
+
+    try{
+      const userStats = await axios.get("http://localhost:3000/api/user-stats?profileUrl=" + linkedInProfileUrl);
+      console.log("User stats:", userStats.data);
+      
+      return userStats.data;
+    }
+    catch(error){
+      console.error("Error fetching user stats:", error);
+      return null;
+    }
+  }
+  
+
+  useEffect(()=>{
+    fetchUserStats().then((stats)=>{
+      setCommentsPosted(stats.commentsPosted);
+      setPostsPublished(stats.postsPublished);
+    })
+  },[])
 
   useEffect(() => {
     chrome.storage.local.get(["commentTimestamps"], (result) => {

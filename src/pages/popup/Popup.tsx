@@ -23,6 +23,11 @@ export default function Popup() {
     };
 
     checkApiKey().then(setApiKeyPresent);
+
+    setInterval(() => {
+      chrome.runtime.sendMessage({ keepAlive: true });
+    }, 5000);
+    
   }, []); 
 
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TaskElement from './TaskElement';
 import { supabase } from '@src/utils/supabase/supabase';
 import { fetchDailyTasks } from '@src/lib/lib';
+import { useNavigate } from 'react-router-dom';
 
 interface tasksProps {
     title: string;
@@ -13,6 +14,7 @@ interface tasksProps {
 const Tasks = () => {
     const [tasks, setTasks] = useState<tasksProps[] | null>(null);
     const [userLevel, setUserLevel] = useState<string | null>(null);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -24,6 +26,9 @@ const Tasks = () => {
                 console.error("Error fetching user data:", authError);
                 return;
             }
+
+            const userLevel = localStorage.getItem("userLevel");
+            console.log("User level from storage:", userLevel);
 
             setUserLevel(localStorage.getItem("userLevel"));
 
@@ -37,6 +42,7 @@ const Tasks = () => {
                 console.log("users-data table :", userData)
                 if (error) {
                     console.error("Error fetching user level:", error);
+                    navigate("/onboarding-survey");
                 } else {
                     console.log("User level : ", userData[0].userLevel)
                     console.log("User email : ", userData[0].email);
@@ -71,6 +77,7 @@ const Tasks = () => {
                 }
             } catch (error) {
                 console.error("Error loading tasks:", error);
+                console.error("Check Gemini API key")
             }
         };
 
