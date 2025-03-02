@@ -7,12 +7,12 @@ const Dropdown = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [width, setWidth] = useState<number | null>(null);
-  const [selectedOption, setSelectedOption] = useState(() => localStorage.getItem('selectedOption') || 'Last 7 days');
+  const [selectedOption, setSelectedOption] = useState(() => localStorage.getItem('selectedTimeframe') || 'Last 7 days');
 
   const options = ["Last 24 hours", "Last 7 days", "Last 30 days"];
 
   useEffect(() => {
-    localStorage.setItem('selectedOption', selectedOption);
+    localStorage.setItem('selectedTimeframe', selectedOption);
   }, [selectedOption]);
 
   useEffect(() => {

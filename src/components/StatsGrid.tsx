@@ -7,29 +7,67 @@ const StatsGrid = () => {
   const [newFollowers, setNewFollowers] = useState(0);
 
   useEffect(() => {
-    // Fetch comment timestamps
+    const timeframe = localStorage.getItem("selectedTimeframe") || "Last 24 hours";
+
+    // Get the cutoff time for filtering
+    const currentTime = new Date().getTime();
+    let cutoffTime: number;
+
+    switch (timeframe) {
+      case "Last 7 days":
+        cutoffTime = currentTime - 7 * 24 * 60 * 60 * 1000;
+        break;
+      case "Last 30 days":
+        cutoffTime = currentTime - 30 * 24 * 60 * 60 * 1000;
+        break;
+      default:
+        cutoffTime = currentTime - 24 * 60 * 60 * 1000;
+        break;
+    }
+
+    // Function to filter timestamps and count recent entries
+    const filterRecent = (timestamps: string[]) =>
+      timestamps.filter((ts) => new Date(ts).getTime() >= cutoffTime).length;
+
+    // Fetch & filter comment timestamps
     chrome.storage.local.get(["commentTimestamps"], (result) => {
       const timestamps = result.commentTimestamps || [];
-      setCommentsPosted(timestamps.length);
+      setCommentsPosted(filterRecent(timestamps));
     });
 
-    // Fetch post timestamps
+    // Fetch & filter post timestamps
     chrome.storage.local.get(["postTimeStamps"], (result) => {
       const timestamps = result.postTimeStamps || [];
-      setPostsPublished(timestamps.length);
+      setPostsPublished(filterRecent(timestamps));
     });
 
-    // Fetch connection & follower data
+    // Fetch & calculate net gained followers and connections
     chrome.storage.local.get(["connectionData"], (result) => {
       const connectionData: { connectionCount: number; followersCount: number; timestamp: string }[] = 
         result.connectionData || [];
 
-      // Sum up all connections & followers
-      const totalConnections = connectionData.reduce((sum, entry) => sum + (entry.connectionCount || 0), 0);
-      const totalFollowers = connectionData.reduce((sum, entry) => sum + (entry.followersCount || 0), 0);
+      console.log("connection data : ", connectionData)
 
-      setNewConnections(totalConnections);
-      setNewFollowers(totalFollowers);
+      // Filter entries within the selected timeframe
+      const filteredData = connectionData.filter((entry) => new Date(entry.timestamp).getTime() >= cutoffTime);
+
+      console.log("filtered data : ", filteredData)
+
+      if (filteredData.length > 0) {
+        // Get the earliest and latest available entries within the timeframe
+        const earliestEntry = filteredData[0];
+        const latestEntry = filteredData[filteredData.length - 1];
+
+        // Calculate the net gain
+        const gainedConnections = latestEntry.connectionCount - earliestEntry.connectionCount;
+        const gainedFollowers = latestEntry.followersCount - earliestEntry.followersCount;
+
+        setNewConnections(gainedConnections);
+        setNewFollowers(gainedFollowers);
+      } else {
+        setNewConnections(0);
+        setNewFollowers(0);
+      }
     });
   }, []);
 
