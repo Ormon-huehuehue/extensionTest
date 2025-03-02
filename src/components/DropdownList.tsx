@@ -7,8 +7,14 @@ const Dropdown = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [width, setWidth] = useState<number | null>(null);
+  const [selectedOption, setSelectedOption] = useState(() => localStorage.getItem('selectedOption') || 'Last 7 days');
 
-  // Close dropdown when clicking outside
+  const options = ["Last 24 hours", "Last 7 days", "Last 30 days"];
+
+  useEffect(() => {
+    localStorage.setItem('selectedOption', selectedOption);
+  }, [selectedOption]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -19,26 +25,28 @@ const Dropdown = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Set dropdown width to match button width
   useEffect(() => {
     if (buttonRef.current) {
       setWidth(buttonRef.current.offsetWidth);
     }
   }, [isOpen]);
 
+  const handleOptionClick = (option: string) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
+
   return (
     <div className="relative inline-block" ref={dropdownRef}>
-      {/* Button */}
       <button
         ref={buttonRef}
-        className="flex items-center gap-2 px-4 py-1 text-[10px] border-2 border-[#efefef] font-medium bg-[#f9fbfc] text-[#434343] rounded-lg transition"
+        className="flex justify-between items-center gap-2 w-[7rem] px-2 py-1 text-[10px] border-2 border-[#efefef] font-medium bg-[#f9fbfc] text-[#434343] rounded-lg transition"
         onClick={() => setIsOpen(!isOpen)}
       >
-        Last 7 days
+        {selectedOption}
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
-      {/* Dropdown Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -50,9 +58,17 @@ const Dropdown = () => {
             style={{ width: width || "auto" }}
           >
             <ul className="py-2 text-[#787878]">
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Last 24 hours</li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Last 7 days</li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Last 30 days</li>
+              {options.map((option) => (
+                <li
+                  key={option}
+                  className={`px-4 py-2 hover:bg-gray-100 cursor-pointer text-[10px] ${
+                    selectedOption === option ? "bg-gray-50" : ""
+                  }`}
+                  onClick={() => handleOptionClick(option)}
+                >
+                  {option}
+                </li>
+              ))}
             </ul>
           </motion.div>
         )}
