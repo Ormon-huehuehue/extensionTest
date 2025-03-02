@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./style.css";
-import { addCommentToLocalStorage, addPostToLocalStorage, fetchGeminiSuggestion } from "@src/lib/lib";
+import { addCommentToLocalStorage, addPostToLocalStorage, fetchGeminiSuggestion, updateFollowerAndConnectionCountInLocalStorage } from "@src/lib/lib";
 import browser from "webextension-polyfill";
 import { supabase } from "@src/utils/supabase/supabase";
 import { signUpNewUser } from "@src/actions";
@@ -19,11 +19,36 @@ if (!rootContainer) throw new Error("Can't find Content root element");
 
 const root = createRoot(rootContainer);
 
+
 const App = () => {
   const [postData, setPostData] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(true);
   const [generatedComment, setGeneratedComment] = useState<string | null>(null);
   const [activeTextBox, setActiveTextBox] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+
+    const updateUserStats = async ()=>{
+      const profileUrl = await chrome.storage.local.get("profileUrl");
+      if (window.location.href.includes(profileUrl?.profileUrl)) {
+        console.log("Updating follower count")
+
+        const connectionsElement = document.querySelector("li.text-body-small") as HTMLElement;
+        const connectionsCount = connectionsElement?.innerText.split(" ")[0];
+        console.log("Connections count", connectionsCount);
+
+        
+        const followersElement = document.querySelector('p a[href*="feed/followers"]') as HTMLElement;
+        const followersCount = followersElement?.innerText.split(" ")[0];
+        
+        updateFollowerAndConnectionCountInLocalStorage(Number(connectionsCount), Number(followersCount));
+        
+      }
+    }
+
+    updateUserStats();
+  }, []);
+
 
   const handleCommentButton = async (event: FocusEvent) => {
     console.log("Comment button clicked")
@@ -126,7 +151,6 @@ const App = () => {
       postButtons.forEach((button)=>{
         (button as HTMLElement).addEventListener("click", handlePostButton)
       })
-
     };
 
     const observeDOMChanges = () => {

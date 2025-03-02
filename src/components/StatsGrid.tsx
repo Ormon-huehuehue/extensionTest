@@ -1,50 +1,41 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios"
 
 const StatsGrid = () => {
   const [commentsPosted, setCommentsPosted] = useState(0);
   const [postsPublished, setPostsPublished] = useState(0);
-
-
-  const fetchUserStats = async () =>{
-    const linkedInProfileUrl = localStorage.getItem("profileUrl");
-    console.log("LinkedIn Profile URL:", linkedInProfileUrl);
-
-    try{
-      const userStats = await axios.get("http://localhost:3000/api/user-stats?profileUrl=" + linkedInProfileUrl);
-      console.log("User stats:", userStats.data);
-      
-      return userStats.data;
-    }
-    catch(error){
-      console.error("Error fetching user stats:", error);
-      return null;
-    }
-  }
-  
-
-  useEffect(()=>{
-    fetchUserStats().then((stats)=>{
-      setCommentsPosted(stats.commentsPosted);
-      setPostsPublished(stats.postsPublished);
-    })
-  },[])
+  const [newConnections, setNewConnections] = useState(0);
+  const [newFollowers, setNewFollowers] = useState(0);
 
   useEffect(() => {
+    // Fetch comment timestamps
     chrome.storage.local.get(["commentTimestamps"], (result) => {
       const timestamps = result.commentTimestamps || [];
       setCommentsPosted(timestamps.length);
     });
 
+    // Fetch post timestamps
     chrome.storage.local.get(["postTimeStamps"], (result) => {
       const timestamps = result.postTimeStamps || [];
       setPostsPublished(timestamps.length);
-    })
+    });
+
+    // Fetch connection & follower data
+    chrome.storage.local.get(["connectionData"], (result) => {
+      const connectionData: { connectionCount: number; followersCount: number; timestamp: string }[] = 
+        result.connectionData || [];
+
+      // Sum up all connections & followers
+      const totalConnections = connectionData.reduce((sum, entry) => sum + (entry.connectionCount || 0), 0);
+      const totalFollowers = connectionData.reduce((sum, entry) => sum + (entry.followersCount || 0), 0);
+
+      setNewConnections(totalConnections);
+      setNewFollowers(totalFollowers);
+    });
   }, []);
 
   const stats = [
-    { value: "23", label: "New Connections" },
-    { value: "50", label: "Number of Follow" },
+    { value: newConnections, label: "New Connections" },
+    { value: newFollowers, label: "New Followers" },
     { value: commentsPosted, label: "Comments Posted" },
     { value: postsPublished, label: "Posts & Articles Published" },
   ];

@@ -92,6 +92,7 @@ export default function OnboardingSurvey() {
 
     if (email && userLevel && linkedInProfileUrl) {
       localStorage.setItem("profileUrl", linkedInProfileUrl);
+      await chrome.storage.local.set({ "profileUrl" : linkedInProfileUrl})
       addUserToDatabase(email, userLevel, linkedInProfileUrl);
     } else {
       console.error("Couldn't quantify user, email or userLevel missing");

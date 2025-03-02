@@ -190,6 +190,45 @@ export async function addCommentToLocalStorage() {
 }
 
 
+export async function updateFollowerAndConnectionCountInLocalStorage(
+    connectionsCount: number,
+    followersCount: number
+  ) {
+    try {
+      console.log("Adding connectionCount to local storage");
+  
+      // Get the current timestamp
+      const timestamp = new Date().toISOString();
+  
+      // Retrieve existing data from storage
+      const result = await chrome.storage.local.get("connectionData");
+      let connectionData: { connectionCount: number; followersCount: number; timestamp: string }[] = result.connectionData ?? [];
+  
+      // Add new entry
+      connectionData.push({ connectionCount: connectionsCount, followersCount, timestamp });
+  
+      // Optionally, keep only the latest N records (e.g., last 100 entries)
+      const MAX_ENTRIES = 100;
+      if (connectionData.length > MAX_ENTRIES) {
+        connectionData = connectionData.slice(-MAX_ENTRIES);
+      }
+  
+      // Save back to storage
+      await chrome.storage.local.set({ connectionData });
+  
+      console.log("Saved data:", { connectionCount: connectionsCount, followersCount, timestamp });
+      
+      return { connectionCount: connectionsCount, followersCount, timestamp };
+    } catch (error) {
+      console.error("Error saving connection count and timestamp:", error);
+      return new Error("Error saving connection count and timestamp");
+    }
+  }
+  
+
+
+
+
 export async function addPostToLocalStorage() {
     try {
         console.log("Adding post timestamp to local storage");
