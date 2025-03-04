@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-const StatsGrid = () => {
+const StatsGrid = ({timeframe} : {timeframe : string}) => {
   const [commentsPosted, setCommentsPosted] = useState(0);
   const [postsPublished, setPostsPublished] = useState(0);
   const [newConnections, setNewConnections] = useState(0);
   const [newFollowers, setNewFollowers] = useState(0);
 
   useEffect(() => {
-    const timeframe = localStorage.getItem("selectedTimeframe") || "Last 24 hours";
-
     // Get the cutoff time for filtering
     const currentTime = new Date().getTime();
     let cutoffTime: number;
@@ -69,7 +67,7 @@ const StatsGrid = () => {
         setNewFollowers(0);
       }
     });
-  }, []);
+  }, [timeframe]);
 
   const stats = [
     { value: newConnections, label: "New Connections" },
