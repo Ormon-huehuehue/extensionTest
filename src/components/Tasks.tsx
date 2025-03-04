@@ -20,8 +20,6 @@ const Tasks = () => {
     useEffect(() => {
         const getUser = async () => {
             const {data, error : authError} = await supabase.auth.getUser();
-            console.log("User data:", data);
-
             if(authError){
                 console.error("Error fetching user data:", authError);
                 return;
@@ -31,7 +29,6 @@ const Tasks = () => {
             setUserLevel(userLevel);
 
             try{
-
                 const { data: userData, error } = await supabase
                 .from('users-data')
                 .select('userLevel, email')

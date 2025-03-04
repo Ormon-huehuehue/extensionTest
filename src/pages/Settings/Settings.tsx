@@ -22,6 +22,10 @@ export default function Settings() {
     try {
       localStorage.removeItem("dailyTasks")
       localStorage.removeItem("userLevel")
+      localStorage.removeItem('lastSyncTime')
+      await chrome.storage.local.remove('commentTimestamps');
+      await chrome.storage.local.remove('postTimeStamps');
+      await chrome.storage.local.remove('connectionData');
       await signOut();
       window.postMessage('checkUser', '*');
       navigate("/account/login"); 
