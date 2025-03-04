@@ -18,6 +18,21 @@ const questions = [
     type: "radio",
   },
   {
+    "id": "industry",
+    "question": "Which industry are you a part of?",
+    "options": [
+      "Technology & Software",
+      "Finance & Investment",
+      "Healthcare & Life Sciences",
+      "Marketing & Advertising",
+      "Consulting & Coaching",
+      "Education & E-learning",
+      "Retail & E-commerce",
+      "Other"
+    ],
+    "type": "radio"
+  },
+  {
     id: "audience",
     question: "Who are you trying to reach on LinkedIn?",
     options: [
