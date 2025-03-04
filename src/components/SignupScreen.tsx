@@ -14,13 +14,17 @@ const SignupScreen = () => {
   
   const navigate = useNavigate();
 
-
+  useEffect(()=>{
+    if(isLoggedIn){
+      navigate("/onboarding-survey")
+    }
+  },[isLoggedIn])
 
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        console.log("Session : ", user)
+      
         setIsLoggedIn(true);
         navigate("/onboarding-survey");
       }
@@ -28,7 +32,6 @@ const SignupScreen = () => {
     
     checkUser();
   }, [loading]);
-
 
   const handleSignup = async () => {
     if (password !== confirmPassword) {
@@ -40,7 +43,6 @@ const SignupScreen = () => {
     setError(null);
     
     try {
-
       browser.runtime.sendMessage({
         type: "SIGNUP",
         email: email,
@@ -55,6 +57,7 @@ const SignupScreen = () => {
 
       if(response.success){
         console.log("Response data :", response.data)
+        setLoading(false)
       }
       // Redirect or show success message if needed
     } catch (err) {

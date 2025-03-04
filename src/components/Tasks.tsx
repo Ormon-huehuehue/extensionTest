@@ -28,9 +28,7 @@ const Tasks = () => {
             }
 
             const userLevel = localStorage.getItem("userLevel");
-            console.log("User level from storage:", userLevel);
-
-            setUserLevel(localStorage.getItem("userLevel"));
+            setUserLevel(userLevel);
 
             try{
 
@@ -39,13 +37,10 @@ const Tasks = () => {
                 .select('userLevel, email')
                 .eq('email', data.user?.email);
                 
-                console.log("users-data table :", userData)
                 if (error) {
                     console.error("Error fetching user level:", error);
                     navigate("/onboarding-survey");
                 } else {
-                    console.log("User level : ", userData[0].userLevel)
-                    console.log("User email : ", userData[0].email);
                     localStorage.setItem('userLevel', userData[0].userLevel);
                     setUserLevel(userData[0].userLevel);
                 }

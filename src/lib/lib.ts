@@ -189,7 +189,6 @@ export async function addCommentToLocalStorage() {
     }
 }
 
-
 export async function updateFollowerAndConnectionCountInLocalStorage(
     connectionsCount: number,
     followersCount: number
@@ -223,12 +222,8 @@ export async function updateFollowerAndConnectionCountInLocalStorage(
       console.error("Error saving connection count and timestamp:", error);
       return new Error("Error saving connection count and timestamp");
     }
-  }
+}
   
-
-
-
-
 export async function addPostToLocalStorage() {
     try {
         console.log("Adding post timestamp to local storage");
@@ -253,3 +248,76 @@ export async function addPostToLocalStorage() {
         return new Error("Error saving POST timestamp");
     }
 }
+
+export async function syncLocalUserActivity(userId: string) {
+    try {
+        console.log("🔄 Syncing user activity...");
+
+        // Fetch local storage data
+        const localData: any = await new Promise((resolve) =>
+            chrome.storage.local.get(["commentTimestamps", "postTimeStamps", "connectionData"], resolve)
+        );
+
+        const localComments = new Set(localData?.commentTimestamps || []);
+        const localPosts = new Set(localData?.postTimeStamps || []);
+        const localConnections = new Set((localData?.connectionData || []).map((entry: any) => JSON.stringify(entry)));
+
+        console.log("📥 Local Data:", localData);
+
+        // Fetch Supabase data
+        const { data: supabaseData, error } = await supabase
+            .from("users-activity")
+            .select("comments, posts, connectionsAndFollowers")
+            .eq("user_id", userId)
+            .single();
+
+        if (error && error.code !== "PGRST116") { // Ignore "record not found" errors
+            console.error("❌ Error fetching Supabase data:", error);
+            return;
+        }
+
+        const supabaseComments = new Set(supabaseData?.comments || []);
+        const supabasePosts = new Set(supabaseData?.posts || []);
+        const supabaseConnectionsAndFollowers = new Set((supabaseData?.connectionsAndFollowers || []).map((entry: any) => JSON.stringify(entry)));
+
+        // 🔀 Merge local and Supabase data (Union)
+        const mergedComments = Array.from(new Set([...localComments, ...supabaseComments]));
+        const mergedPosts = Array.from(new Set([...localPosts, ...supabasePosts]));
+        //@ts-expect-error
+        const mergedConnectionsAndFollowers = Array.from(new Set([...localConnections, ...supabaseConnectionsAndFollowers])).map(JSON.parse);
+
+        console.log("✅ Merged Data:", { mergedComments, mergedPosts, mergedConnectionsAndFollowers });
+
+        // 📝 Update local storage
+        await chrome.storage.local.set({
+            commentTimestamps: mergedComments,
+            postTimeStamps: mergedPosts,
+            connectionData: mergedConnectionsAndFollowers
+        });
+
+        console.log("💾 Local storage updated.");
+
+        // 🏦 Update Supabase
+        const { error: updateError } = await supabase
+            .from("users-activity")
+            //@ts-expect-error
+            .upsert(
+                { 
+                    user_id: userId, 
+                    comments: mergedComments, 
+                    posts: mergedPosts, 
+                    connectionsAndFollowers: mergedConnectionsAndFollowers 
+                },
+                { onConflict: ["user_id"] }
+            );
+
+        if (updateError) {
+            console.error("❌ Error updating Supabase:", updateError);
+        } else {
+            console.log("✅ Successfully synced user activity to Supabase.");
+        }
+    } catch (err) {
+        console.error("❌ Error syncing user activity:", err);
+    }
+}
+

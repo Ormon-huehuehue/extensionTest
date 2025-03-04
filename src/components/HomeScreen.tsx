@@ -10,19 +10,14 @@ type panelType = "Tasks" | "Insights" | "Connections";
 
 const HomeScreen = () => {
 
-    const {panel} = useParams();
-
-
+  const {panel} = useParams();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
-
- 
 
     useEffect(() => {
       const checkUser = async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-          console.log("Session : ", user)
           setIsLoggedIn(true);
         }
         else{
