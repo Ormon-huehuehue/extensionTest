@@ -166,8 +166,6 @@ Generate a different list of tasks on every prompt cuz i'm gonna send you this s
 
 export async function addCommentToLocalStorage() {
     try {
-        console.log("Adding comment timestamp to local storage");
-
         // Get the current timestamp
         const timestamp = new Date().toISOString();
 
@@ -251,7 +249,7 @@ export async function addPostToLocalStorage() {
 
 export async function syncLocalUserActivity(userId: string) {
     try {
-        console.log("🔄 Syncing user activity...");
+        
 
         // Fetch local storage data
         const localData: any = await new Promise((resolve) =>
@@ -262,7 +260,7 @@ export async function syncLocalUserActivity(userId: string) {
         const localPosts = new Set(localData?.postTimeStamps || []);
         const localConnections = new Set((localData?.connectionData || []).map((entry: any) => JSON.stringify(entry)));
 
-        console.log("📥 Local Data:", localData);
+       
 
         // Fetch Supabase data
         const { data: supabaseData, error } = await supabase
@@ -286,16 +284,12 @@ export async function syncLocalUserActivity(userId: string) {
         //@ts-expect-error
         const mergedConnectionsAndFollowers = Array.from(new Set([...localConnections, ...supabaseConnectionsAndFollowers])).map(JSON.parse);
 
-        console.log("✅ Merged Data:", { mergedComments, mergedPosts, mergedConnectionsAndFollowers });
-
         // 📝 Update local storage
         await chrome.storage.local.set({
             commentTimestamps: mergedComments,
             postTimeStamps: mergedPosts,
             connectionData: mergedConnectionsAndFollowers
         });
-
-        console.log("💾 Local storage updated.");
 
         // 🏦 Update Supabase
         const { error: updateError } = await supabase
@@ -314,7 +308,7 @@ export async function syncLocalUserActivity(userId: string) {
         if (updateError) {
             console.error("❌ Error updating Supabase:", updateError);
         } else {
-            console.log("✅ Successfully synced user activity to Supabase.");
+            console.log("✅ Successfully synced user activity");
         }
     } catch (err) {
         console.error("❌ Error syncing user activity:", err);

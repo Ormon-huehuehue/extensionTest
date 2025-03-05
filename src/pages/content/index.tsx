@@ -35,14 +35,31 @@ const App = () => {
 
         const connectionsElement = document.querySelector("li.text-body-small") as HTMLElement;
         const connectionsCount = connectionsElement?.innerText.split(" ")[0];
-        console.log("Connections count", connectionsCount);
-
         
         const followersElement = document.querySelector('p a[href*="feed/followers"]') as HTMLElement;
         const followersCount = followersElement?.innerText.split(" ")[0];
         
         updateFollowerAndConnectionCountInLocalStorage(Number(connectionsCount), Number(followersCount));
+
+        const suggestedProfilesList = Array.from(document.querySelectorAll(".pvs-header__left-container--stack")).find((el) => el.textContent?.trim().includes("People you may know"))?.closest(".pv-profile-card")?.querySelector("ul")?.querySelectorAll("li.artdeco-list__item")
+
+        if (suggestedProfilesList) {
+          const profiles = Array.from(suggestedProfilesList).map((profileEl) => {
+            const links = profileEl.querySelectorAll("a");
+            const imageElement = links[0]
+            const userDataElement = links[1]
         
+            return { imageElement, userDataElement };
+          });
+        
+          // Store data using chrome.storage.local
+          chrome.storage.local.set({ suggestedProfiles: profiles }, () => {
+            console.log("Profiles saved in Chrome storage:", profiles);
+          });
+        }
+        else {
+          console.log("No suggested profiles found.");
+        }
       }
     }
 

@@ -44,12 +44,8 @@ const StatsGrid = ({timeframe} : {timeframe : string}) => {
       const connectionData: { connectionCount: number; followersCount: number; timestamp: string }[] = 
         result.connectionData || [];
 
-      console.log("connection data : ", connectionData)
-
       // Filter entries within the selected timeframe
       const filteredData = connectionData.filter((entry) => new Date(entry.timestamp).getTime() >= cutoffTime);
-
-      console.log("filtered data : ", filteredData)
 
       if (filteredData.length > 0) {
         // Get the earliest and latest available entries within the timeframe

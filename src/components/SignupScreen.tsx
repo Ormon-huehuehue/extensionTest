@@ -133,12 +133,12 @@ const SignupScreen = () => {
 
           <hr className="my-6 border-gray-300" />
           
-          <button
+          {/* <button
             type="button"
             className="flex w-full justify-center rounded-md bg-linkedInBackground px-3 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline-blueBackground cursor-pointer"
           >
             Sign in with LinkedIn
-          </button>
+          </button> */}
         </form>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/img/dummyProfile.png"
 
@@ -22,12 +22,17 @@ const dummyData = [
 
 
 const Connections = () => {
+
+  useEffect(()=>{
+
+  })
+
   return (
     <div className= 'flex flex-col'>
       <h1 className='w-full text-center text-headingText text-xl'>Suggested Profiles</h1>
       <div className='flex flex-col items-center pt-5 px-3 gap-4'>
         {dummyData.map((data, index) => (
-          <ProfileCard key={index} location={data.Location} description={data.Description} name={data.Name} />
+          <ProfileCard key={index} description={data.Description} name={data.Name} />
         ))}
       </div>
     </div>
@@ -39,7 +44,7 @@ export default Connections
 
 
 
-const ProfileCard = ({ location, description, name }: { location: string, description: string, name: String }) => {
+const ProfileCard = ({ description, name }: { location: HTMLElement, description: string, name: String }) => {
 
   return (
     <motion.div 
@@ -53,7 +58,6 @@ const ProfileCard = ({ location, description, name }: { location: string, descri
               <img src= {logo} alt="" width={50} height={50}/>
             </div>
             <div className="flex flex-col">
-              <h1 className='text-grayText text-[12px]'> {location}</h1>
               <p className={`text-[#302f2f] `}>
                 {name}
               </p>
