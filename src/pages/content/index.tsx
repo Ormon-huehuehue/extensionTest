@@ -3,9 +3,6 @@ import { createRoot } from "react-dom/client";
 import "./style.css";
 import { addCommentToLocalStorage, addPostToLocalStorage, fetchGeminiSuggestion, updateFollowerAndConnectionCountInLocalStorage } from "@src/lib/lib";
 import browser from "webextension-polyfill";
-import { supabase } from "@src/utils/supabase/supabase";
-import { signUpNewUser } from "@src/actions";
-import axios from "axios";
 
 // Ensure we don't inject multiple root elements
 if (!document.getElementById("__react_root")) {
@@ -46,8 +43,8 @@ const App = () => {
         if (suggestedProfilesList) {
           const profiles = Array.from(suggestedProfilesList).map((profileEl) => {
             const links = profileEl.querySelectorAll("a");
-            const imageElement = links[0]
-            const userDataElement = links[1]
+            const imageElement = links[0]?.outerHTML;
+            const userDataElement = links[1]?.outerHTML;
         
             return { imageElement, userDataElement };
           });
