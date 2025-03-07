@@ -23,43 +23,52 @@ const App = () => {
   const [generatedComment, setGeneratedComment] = useState<string | null>(null);
   const [activeTextBox, setActiveTextBox] = useState<HTMLElement | null>(null);
 
-  useEffect(() => {
+ 
 
-    const updateUserStats = async ()=>{
-      const profileUrl = await chrome.storage.local.get("profileUrl");
-      if (window.location.href.includes(profileUrl?.profileUrl)) {
-        console.log("Updating follower count")
+  const updateUserStats = async ()=>{
+    console.log("Updatiung user stats")
+    const profileUrl = await chrome.storage.local.get("profileUrl");
+    if (window.location.href.includes(profileUrl?.profileUrl)) {
+      console.log("Updating follower count")
 
-        const connectionsElement = document.querySelector("li.text-body-small") as HTMLElement;
-        const connectionsCount = connectionsElement?.innerText.split(" ")[0];
-        
-        const followersElement = document.querySelector('p a[href*="feed/followers"]') as HTMLElement;
-        const followersCount = followersElement?.innerText.split(" ")[0];
-        
-        updateFollowerAndConnectionCountInLocalStorage(Number(connectionsCount), Number(followersCount));
+      const connectionsElement = document.querySelector("li.text-body-small") as HTMLElement;
+      const connectionsCount = connectionsElement?.innerText.split(" ")[0];
+      
+      const followersElement = document.querySelector('p a[href*="feed/followers"]') as HTMLElement;
+      const followersCount = followersElement?.innerText.split(" ")[0];
+      
+      updateFollowerAndConnectionCountInLocalStorage(Number(connectionsCount), Number(followersCount));
 
-        const suggestedProfilesList = Array.from(document.querySelectorAll(".pvs-header__left-container--stack")).find((el) => el.textContent?.trim().includes("People you may know"))?.closest(".pv-profile-card")?.querySelector("ul")?.querySelectorAll("li.artdeco-list__item")
+      const suggestedProfilesList = Array.from(document.querySelectorAll(".pvs-header__left-container--stack")).find((el) => el.textContent?.trim().includes("People you may know"))?.closest(".pv-profile-card")?.querySelector("ul")?.querySelectorAll("li.artdeco-list__item");
 
-        if (suggestedProfilesList) {
-          const profiles = Array.from(suggestedProfilesList).map((profileEl) => {
-            const links = profileEl.querySelectorAll("a");
-            const imageElement = links[0]?.outerHTML;
-            const userDataElement = links[1]?.outerHTML;
-        
-            return { imageElement, userDataElement };
-          });
-        
-          // Store data using chrome.storage.local
-          chrome.storage.local.set({ suggestedProfiles: profiles }, () => {
-            console.log("Profiles saved in Chrome storage:", profiles);
-          });
-        }
-        else {
-          console.log("No suggested profiles found.");
-        }
+      if (suggestedProfilesList) {
+        const profiles = Array.from(suggestedProfilesList).map((profileEl) => {
+          const links = profileEl.querySelectorAll("a");
+          const profileLink = links[0].href;
+          const imageElement = links[0]?.outerHTML;
+          const hiddenTextElements = links[1]?.querySelectorAll('[aria-hidden="true"]');
+
+          const userName = (hiddenTextElements[0] as HTMLElement)?.innerText || "";
+          const description = (hiddenTextElements[1] as HTMLElement)?.innerText || "";
+
+          console.log({ userName, description });
+      
+          return { imageElement, userName, description, profileLink };
+        });
+      
+        // Store data using chrome.storage.local
+        chrome.storage.local.set({ suggestedProfiles: profiles }, () => {
+          console.log("Profiles saved in Chrome storage:", profiles);
+        });
+      }
+      else {
+        console.log("No suggested profiles found.");
       }
     }
+  }
 
+  useEffect(() => {
+   
     updateUserStats();
   }, []);
 

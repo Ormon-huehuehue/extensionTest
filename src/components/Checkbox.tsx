@@ -16,7 +16,7 @@ export default function Checkbox() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           exit={{ scale: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }} // Smooth cubic-bezier ease
           xmlns="http://www.w3.org/2000/svg"
           className="w-4 h-4 text-white"
           fill="none"

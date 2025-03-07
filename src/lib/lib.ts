@@ -2,13 +2,17 @@ import { supabase } from "@src/utils/supabase/supabase";
 import axios from "axios";
 import browser from 'webextension-polyfill';
 
+const geminiKey = import.meta.env.VITE_GEMINI_KEY;
+
 export async function fetchGeminiSuggestion(postText: string): Promise<string> {
     try {
         // Get API Key from Chrome Storage
-        const apiKey = await (async () => {
-            const data = await browser.storage.local.get("GEMINI_API_KEY");
-            return data.GEMINI_API_KEY || null;
-        })();
+        // const apiKey = await (async () => {
+        //     const data = await browser.storage.local.get("GEMINI_API_KEY");
+        //     return data.GEMINI_API_KEY || null;
+        // })();
+
+        const apiKey = geminiKey;
 
         if (!apiKey) {
             return "No API Key found. Please set your API key in the extension settings.";
@@ -45,10 +49,12 @@ export async function fetchGeminiSuggestion(postText: string): Promise<string> {
 export async function fetchUserDivision(surveyResponse: string): Promise<string> {
     try {
         // Get API Key from Chrome Storage
-        const apiKey = await (async () => {
-            const data = await browser.storage.local.get("GEMINI_API_KEY");
-            return data.GEMINI_API_KEY || null;
-        })();
+        // const apiKey = await (async () => {
+        //     const data = await browser.storage.local.get("GEMINI_API_KEY");
+        //     return data.GEMINI_API_KEY || null;
+        // })();
+
+        const apiKey = geminiKey;
 
         if (!apiKey) {
             return "No API Key found. Please set your API key in the extension settings.";
@@ -87,10 +93,12 @@ export async function fetchUserDivision(surveyResponse: string): Promise<string>
 export async function fetchDailyTasks(userLevel: string): Promise<string> {
     try {
         // Get API Key from Chrome Storage
-        const apiKey = await (async () => {
-            const data = await browser.storage.local.get("GEMINI_API_KEY");
-            return data.GEMINI_API_KEY || null;
-        })();
+        // const apiKey = await (async () => {
+        //     const data = await browser.storage.local.get("GEMINI_API_KEY");
+        //     return data.GEMINI_API_KEY || null;
+        // })();
+
+        const apiKey = geminiKey;
 
         if (!apiKey) {
             return "No API Key found. Please set your API key in the extension settings.";

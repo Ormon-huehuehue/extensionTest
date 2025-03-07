@@ -103,8 +103,6 @@ export default function OnboardingSurvey() {
 
     const email = data.user?.email;
     const linkedInProfileUrl = answers["profileUrl"]; 
-    console.log("LinkedIn Profile URL: ", linkedInProfileUrl);
-
     if (email && userLevel && linkedInProfileUrl) {
       localStorage.setItem("profileUrl", linkedInProfileUrl);
       await chrome.storage.local.set({ "profileUrl" : linkedInProfileUrl})
@@ -114,7 +112,6 @@ export default function OnboardingSurvey() {
       return new Error("Couldn't quantify user, email or userLevel missing");
     }
 
-    console.log("User Division: ", userLevel);
     navigate("/home/Tasks");
   };
   return (

@@ -3,6 +3,7 @@ import TaskElement from './TaskElement';
 import { supabase } from '@src/utils/supabase/supabase';
 import { fetchDailyTasks } from '@src/lib/lib';
 import { useNavigate } from 'react-router-dom';
+import {motion} from "framer-motion"
 
 interface tasksProps {
     title: string;
@@ -44,6 +45,7 @@ const Tasks = () => {
             }
             catch(error){
                 console.error("Error fetching user level:", error);
+                navigate("/onboarding-survey")
             }
         };
 
@@ -77,7 +79,14 @@ const Tasks = () => {
     }, [userLevel]);
 
     return (
-        <div className='h-full flex flex-col gap-3 mb-5'>
+    <motion.div
+        key="connections"
+        initial={{ opacity: 0, scaleY: 0.8, originY: 0 }}
+        animate={{ opacity: 1, scaleY: 1 }}
+        exit={{ opacity: 0, scaleY: 0 }}
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        layout
+        className='h-full flex flex-col gap-3 mb-5'>
             {tasks?.map((task, index) => (
                 <TaskElement 
                     key={index} 
@@ -87,7 +96,7 @@ const Tasks = () => {
                     contextualTips={task.contextualTips} 
                 />
             ))}
-        </div>
+        </motion.div>
     );
 };
 
